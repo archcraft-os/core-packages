@@ -1,0 +1,179 @@
+From 009ecc71a0b397faed8fafb3c4d62e96d0d86a8a Mon Sep 17 00:00:00 2001
+From: Keshav Padram Amburay <address@hidden>
+Modified for Archcraft By : Aditya Shakya <address@hidden>
+Date: Wed, 6 Nov 2013 21:49:40 +0530
+
+Additional modification for GRUB_ROOT_FS_MODE by: 10101000 <address@hidden>
+Date: Fri, 11 Dec 2020 14:03:57 -0700
+
+Subject: [PATCH] Add Arch Linux specific grub-mkconfig fixes
+
+Patch modified based on ideas from Felix aka fstirlitz,
+given at https://bugs.archlinux.org/task/37904?getfile=11257
+---
+
+diff --git a/util/grub-mkconfig.in b/util/grub-mkconfig.in
+index d3e879b8e..4a56a5958 100644
+--- a/util/grub-mkconfig.in
++++ b/util/grub-mkconfig.in
+@@ -248,7 +248,8 @@ export GRUB_DEFAULT \
+   GRUB_ENABLE_CRYPTODISK \
+   GRUB_BADRAM \
+   GRUB_OS_PROBER_SKIP_LIST \
+-  GRUB_DISABLE_SUBMENU
++  GRUB_DISABLE_SUBMENU \
++  GRUB_ROOT_FS_RO
+ 
+ if test "x${grub_cfg}" != "x"; then
+   rm -f "${grub_cfg}.new"
+diff --git a/util/grub-mkconfig_lib.in b/util/grub-mkconfig_lib.in
+index 301d1ac22..803dddb4e 100644
+--- a/util/grub-mkconfig_lib.in
++++ b/util/grub-mkconfig_lib.in
+@@ -253,6 +253,9 @@ version_test_gt ()
+     *.old:*.old) ;;
+     *.old:*) version_test_gt_a="`echo "$version_test_gt_a" | sed -e 's/\.old$//'`" ; version_test_gt_cmp=gt ;;
+     *:*.old) version_test_gt_b="`echo "$version_test_gt_b" | sed -e 's/\.old$//'`" ; version_test_gt_cmp=ge ;;
++    *-lts:*-lts) ;;
++    *-lts:*) version_test_gt_a="`echo "$version_test_gt_a" | sed -e 's/-lts$//'`" ; version_test_gt_cmp=gt ;;
++    *:*-lts) version_test_gt_b="`echo "$version_test_gt_b" | sed -e 's/-lts$//'`" ; version_test_gt_cmp=ge ;;
+   esac
+   version_test_numeric "$version_test_gt_a" "$version_test_gt_cmp" "$version_test_gt_b"
+   return "$?"
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index e8b01c0d0..c3dd34a59 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -29,9 +29,9 @@ export TEXTDOMAINDIR="@localedir@"
+ CLASS="--class gnu-linux --class gnu --class os"
+ 
+ if [ "x${GRUB_DISTRIBUTOR}" = "x" ] ; then
+-  OS=GNU/Linux
++  OS=Linux
+ else
+-  OS="${GRUB_DISTRIBUTOR} GNU/Linux"
++  OS="${GRUB_DISTRIBUTOR}"
+   CLASS="--class $(echo ${GRUB_DISTRIBUTOR} | tr 'A-Z' 'a-z' | cut -d' ' -f1|LC_ALL=C sed 's,[^[:alnum:]_],_,g') ${CLASS}"
+ fi
+ 
+@@ -92,9 +92,11 @@ linux_entry ()
+   if [ x$type != xsimple ] ; then
+       case $type in
+ 	  recovery)
+-	      title="$(gettext_printf "%s, with Linux %s (recovery mode)" "${os}" "${version}")" ;;
++	      title="$(gettext_printf "%s (Kernel: %s - recovery mode)" "${os}" "${version}")" ;;
++	  fallback)
++	      title="$(gettext_printf "%s (Kernel: %s - fallback initramfs)" "${os}" "${version}")" ;;
+ 	  *)
+-	      title="$(gettext_printf "%s, with Linux %s" "${os}" "${version}")" ;;
++	      title="$(gettext_printf "%s (Kernel: %s)" "${os}" "${version}")" ;;
+       esac
+       if [ x"$title" = x"$GRUB_ACTUAL_DEFAULT" ] || [ x"Previous Linux versions>$title" = x"$GRUB_ACTUAL_DEFAULT" ]; then
+ 	  replacement_title="$(echo "Advanced options for ${OS}" | sed 's,>,>>,g')>$(echo "$title" | sed 's,>,>>,g')"
+@@ -106,7 +108,7 @@ linux_entry ()
+   else
+       echo "menuentry '$(echo "$os" | grub_quote)' ${CLASS} \$menuentry_id_option 'gnulinux-simple-$boot_device_id' {" | sed "s/^/$submenu_indentation/"
+   fi      
+-  if [ x$type != xrecovery ] ; then
++  if [ x$type != xrecovery ] && [ x$type != xfallback ] ; then
+       save_default_entry | grub_add_tab
+   fi
+ 
+@@ -138,10 +140,17 @@ linux_entry ()
+     fi
+     printf '%s\n' "${prepare_boot_cache}" | sed "s/^/$submenu_indentation/"
+   fi
+-  message="$(gettext_printf "Loading Linux %s ..." ${version})"
++
++  if [ "x${GRUB_ROOT_FS_RO}" = "xtrue" ]; then
++    grub_root_fs_mode=ro
++  else
++    grub_root_fs_mode=rw
++  fi
++
++  message="$(gettext_printf "Loading Linux %s ..." "${version}")"
+   sed "s/^/$submenu_indentation/" << EOF
+ 	echo	'$(echo "$message" | grub_quote)'
+-	linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
++	linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ${grub_root_fs_mode} ${args}
+ EOF
+   if test -n "${initrd}" ; then
+     # TRANSLATORS: ramdisk isn't identifier. Should be translated.
+@@ -202,6 +211,25 @@ while [ "x$list" != "x" ] ; do
+   alt_version=`echo $version | sed -e "s,\.old$,,g"`
+   linux_root_device_thisversion="${LINUX_ROOT_DEVICE}"
+ 
++  if test -e "/etc/os-release" ; then
++    kbasename="`echo "${basename}" | sed -e 's,vmlinuz-,linux,g'`"
++    if test -e "${dirname}/${kbasename}.kver" ; then
++ 	version="$(cat ${dirname}/${kbasename}.kver)"
++    fi
++    kbasename2="`echo "${basename}" | sed -e 's,vmlinuz-,linux-,g'`"
++    if test -e "${dirname}/${kbasename2}.kver" ; then
++ 	version="$(cat ${dirname}/${kbasename2}.kver)"
++    fi
++    kbasename3="`echo "${basename}" | sed -e 's,vmlinuz-,linux,g' | sed -e 's,\.,,g'`"
++    if test -e "${dirname}/${kbasename3}.kver" ; then
++ 	version="$(cat ${dirname}/${kbasename3}.kver)"
++    fi
++    kbasename4="`echo "${basename}" | sed -e 's,vmlinuz-,linux-,g' | sed -e 's,\.,,g'`"
++    if test -e "${dirname}/${kbasename4}.kver" ; then
++ 	version="$(cat ${dirname}/${kbasename4}.kver)"
++    fi
++  fi
++
+   initrd_early=
+   for i in ${GRUB_EARLY_INITRD_LINUX_STOCK} \
+ 	   ${GRUB_EARLY_INITRD_LINUX_CUSTOM}; do
+@@ -211,6 +239,7 @@ while [ "x$list" != "x" ] ; do
+   done
+ 
+   initrd_real=
++  initramfs_archcraft="`echo "${basename}" | sed -e 's,vmlinuz,initramfs,g'`"
+   for i in "initrd.img-${version}" "initrd-${version}.img" "initrd-${version}.gz" \
+ 	   "initrd-${version}" "initramfs-${version}.img" \
+ 	   "initrd.img-${alt_version}" "initrd-${alt_version}.img" \
+@@ -218,7 +247,8 @@ while [ "x$list" != "x" ] ; do
+ 	   "initramfs-genkernel-${version}" \
+ 	   "initramfs-genkernel-${alt_version}" \
+ 	   "initramfs-genkernel-${GENKERNEL_ARCH}-${version}" \
+-	   "initramfs-genkernel-${GENKERNEL_ARCH}-${alt_version}"; do
++	   "initramfs-genkernel-${GENKERNEL_ARCH}-${alt_version}" \
++	   "${initramfs_archcraft}.img" ; do
+     if test -e "${dirname}/${i}" ; then
+       initrd_real="${i}"
+       break
+@@ -285,6 +315,17 @@ while [ "x$list" != "x" ] ; do
+ 
+   linux_entry "${OS}" "${version}" advanced \
+               "${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT}"
++
++  for i in "${initramfs_archcraft}-fallback.img" "initramfs-${version}-fallback.img" ; do
++    if test -e "${dirname}/${i}" ; then
++      initrd="${i}"
++      gettext_printf "Found initrd fallback image: %s\n" "${dirname}/${initrd}" >&2
++      linux_entry "${OS}" "${version}" fallback \
++                  "${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT}"
++      break
++    fi
++  done
++
+   if [ "x${GRUB_DISABLE_RECOVERY}" != "xtrue" ]; then
+     linux_entry "${OS}" "${version}" recovery \
+                 "single ${GRUB_CMDLINE_LINUX}"
+diff --git a/util/grub.d/30_os-prober.in b/util/grub.d/30_os-prober.in
+index 1b91c102f..1ecb80226 100644
+--- a/util/grub.d/30_os-prober.in
++++ b/util/grub.d/30_os-prober.in
+@@ -207,7 +207,7 @@ EOF
+         LBOOT="`echo ${LINUX} | cut -d ':' -f 2`"
+         LLABEL="`echo ${LINUX} | cut -d ':' -f 3 | tr '^' ' '`"
+         LKERNEL="`echo ${LINUX} | cut -d ':' -f 4`"
+-        LINITRD="`echo ${LINUX} | cut -d ':' -f 5`"
++        LINITRD="`echo ${LINUX} | cut -d ':' -f 5 | tr '^' ' '`"
+         LPARAMS="`echo ${LINUX} | cut -d ':' -f 6- | tr '^' ' '`"
+ 
+         if [ -z "${LLABEL}" ] ; then
+-- 
+1.8.5.1
+

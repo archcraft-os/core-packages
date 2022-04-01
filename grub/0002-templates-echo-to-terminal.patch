@@ -1,0 +1,11 @@
+--- a/util/grub.d/30_os-prober.in.new	2021-03-10 14:44:22.574855946 +0100
++++ b/util/grub.d/30_os-prober.in	2021-03-10 14:43:16.128187566 +0100
+@@ -42,7 +42,7 @@ EOF
+ }
+ 
+ if [ "x${GRUB_DISABLE_OS_PROBER}" = "xtrue" ]; then
+-  gettext_printf "os-prober will not be executed to detect other bootable partitions.\nSystems on them will not be added to the GRUB boot configuration.\nCheck GRUB_DISABLE_OS_PROBER documentation entry.\n"
++  grub_warn "$(gettext_printf "os-prober will not be executed to detect other bootable partitions.\nSystems on them will not be added to the GRUB boot configuration.\nCheck GRUB_DISABLE_OS_PROBER documentation entry.\n")"
+   exit 0
+ fi
+ 

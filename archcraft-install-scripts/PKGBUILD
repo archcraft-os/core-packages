@@ -1,0 +1,24 @@
+# Maintainer: Aditya Shakya <@adi1090x>
+
+pkgname=archcraft-install-scripts
+pkgver=1.0
+pkgrel=3
+pkgdesc='Archcraft Install Scripts'
+url="https://github.com/archcraft-os/core-packages"
+arch=('any')
+license=('GPL3')
+
+source=(
+		'chrooted_post_install.sh'
+		'post_install.sh'
+)
+
+sha512sums=('aaf36b4661560906e306ee5ce9b794f8fe63106a917750ecb7fca29346025e0f945e73bf85b6216badf2faba23c09396651485080a3c75e8966a574c4723a42b'
+            '001e216a84bb8646f414b9846e94ece00ca07ee298bcf7335bbdca587a42041b31f90d8d5aaf17f0de869950a3ffe1122428c1e71584bcb22191dcc3d1a2e0aa')
+
+package() {
+	local bin=${pkgdir}/usr/bin
+	
+	install -Dm755 chrooted_post_install.sh 	${bin}/chrooted_post_install.sh
+	install -Dm755 post_install.sh 				${bin}/post_install.sh
+}

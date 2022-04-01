@@ -1,0 +1,25 @@
+post_install() {
+  if [ -f /boot/grub/grub.cfg.pacsave ]; then
+    echo "Copying /boot/grub/grub.cfg.pacsave to /boot/grub/grub.cfg"
+    install -D -m0644 /boot/grub/grub.cfg.pacsave /boot/grub/grub.cfg
+  fi
+  if [ -f /etc/default/grub.pacsave ]; then
+    echo "Copying /etc/default/grub.pacsave to /etc/default/grub"
+    install -D -m0644 /etc/default/grub.pacsave /etc/default/grub
+  fi
+
+  cat <<EOM
+:: Generate your bootloader configuration with:
+     grub-mkconfig -o /boot/grub/grub.cfg
+EOM
+}
+
+post_upgrade() {
+  if [[ -e /sys/firmware/efi/efivars ]]; then
+    cat <<EOM
+:: Grub does no longer support side-loading modules when secure boot is
+   enabled. Thus booting will fail, unless you have an efi executable
+   'grubx64.efi' with bundled modules.
+EOM
+  fi
+}

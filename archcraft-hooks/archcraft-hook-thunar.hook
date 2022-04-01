@@ -1,0 +1,13 @@
+## Copyright (C) 2020-2021 Aditya Shakya <adi1090x@gmail.com>
+## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = thunar
+
+[Action]
+Description = Fixing thunar wallpaper module for openbox...
+When = PostTransaction
+Exec = /usr/bin/archcraft-hooks-misc fix-thunar

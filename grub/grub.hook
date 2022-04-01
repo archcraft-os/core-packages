@@ -1,0 +1,12 @@
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/lib/modules/*/vmlinuz
+Target = boot/vmlinuz*
+
+[Action]
+Description = Updating Grub Configuration...
+When = PostTransaction
+Exec = /usr/bin/update-grub

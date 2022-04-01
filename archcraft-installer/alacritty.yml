@@ -1,0 +1,97 @@
+## Copyright (C) 2020-2021 Aditya Shakya <adi1090x@gmail.com>
+## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
+
+## Configuration for Alacritty, the GPU enhanced terminal emulator.
+## It's a very basic and simple config file, for full configuration...
+## See, /usr/share/doc/alacritty/example/alacritty.yml
+
+## Set environment variables
+env:
+  TERM: alacritty
+  WINIT_X11_SCALE_FACTOR: '1.0'
+
+## Terminal window settings
+window:
+  dimensions:
+    columns: 105
+    lines: 30
+
+  padding:
+    x: 0
+    y: 10
+
+  decorations: full
+  startup_mode: Windowed
+  dynamic_title: true
+
+## scrolling
+  history: 10000
+  multiplier: 3
+
+## Background opacity
+  opacity: 1.0
+
+## Cursor
+cursor:
+  style:
+    shape: Block
+    blinking: On
+
+  unfocused_hollow: false
+
+## Live config reload
+live_config_reload: true
+
+## Colors configuration
+colors:
+  # Default colors
+  primary:
+    background: '#1E2128'
+    foreground: '#ABB2BF'
+
+  # Normal colors
+  normal:
+    black:   '#32363D'
+    red:     '#DA4453'
+    green:   '#98C379'
+    yellow:  '#E5C07A'
+    blue:    '#1E2128'
+    magenta: '#C778DD'
+    cyan:    '#55B6C2'
+    white:   '#ABB2BF'
+
+  # Bright colors
+  bright:
+    black:   '#50545B'
+    red:     '#DA4453'
+    green:   '#A2CD83'
+    yellow:  '#EFCA84'
+    blue:    '#6CB8F9'
+    magenta: '#D282E7'
+    cyan:    '#5FC0CC'
+    white:   '#B5BCC9'
+
+# Font configuration
+font:
+  # Normal (roman) font face
+  normal:
+    family: "JetBrains Mono Medium"
+    #style: Regular
+
+  # Bold font face
+  bold:
+    family: "JetBrains Mono Medium"
+    #style: Bold
+
+  # Italic font face
+  italic:
+    family: "JetBrains Mono Medium"
+    #style: Italic
+
+  # Bold italic font face
+  bold_italic:
+    family: "JetBrains Mono Medium"
+    #style: Bold Italic
+
+  # Point size
+  size: 12

@@ -2,7 +2,7 @@
 
 pkgname=archcraft-installer
 pkgver=1.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Command line installer for Archcraft for expert users."
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')

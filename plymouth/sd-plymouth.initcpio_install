@@ -7,7 +7,7 @@ build() {
 	add_dir /run/plymouth
 
 	DATADIR="/usr/share/plymouth"
-	PLYMOUTH_LOGO_FILE="${DATADIR}/arch-logo.png"
+	PLYMOUTH_LOGO_FILE="${DATADIR}/archcraft-logo.png"
 	PLYMOUTH_THEME_NAME="$(/usr/bin/plymouth-set-default-theme)"
 	PLYMOUTH_THEME_DIR="${DATADIR}/themes/${PLYMOUTH_THEME_NAME}"
 	PLYMOUTH_IMAGE_DIR=$(grep "ImageDir *= *" ${PLYMOUTH_THEME_DIR}/${PLYMOUTH_THEME_NAME}.plymouth | sed 's/ImageDir *= *//')

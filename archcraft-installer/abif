@@ -425,8 +425,8 @@ set_root_password() {
 
 #_________ Create New User _____________________________________#
 
-# Create new user(s) for installed system. First user is created by renaming the live account.
-# All others are brand new.
+# Create new user(s) for installed system.
+# All brand new.
 create_new_user() {
 
 	dialog --backtitle "$VERSION - $SYSTEM ($ARCHI)" --title " $_NUsrTitle " --inputbox "$_NUsrBody" 0 0 "" 2>${ANSWER} || config_base_menu
@@ -461,43 +461,30 @@ create_new_user() {
 	sleep 2
 	echo -e "${PASSWD}\n${PASSWD}" > /tmp/.passwd
 
-    # If the first (or only) user account, then change the live account
-	if [[ -e ${MOUNTPOINT}/home/$ISO_USER ]]; then
-	   arch_chroot "passwd $ISO_USER" < /tmp/.passwd >/dev/null 2>>/tmp/.errlog
-	   check_for_error
-        
-	   # Distro-specific configuration for entered username
-	   sed -i "s/$ISO_USER/$USER/g" ${MOUNTPOINT}/home/$ISO_USER/.gtkrc-2.0 2>/tmp/.errlog
-        
-	   # Convert live account to entered username - group, password, folder, and ownership
-	   sed -i "s/$ISO_USER/$USER/g" ${MOUNTPOINT}/etc/group 2>>/tmp/.errlog
-	   sed -i "s/$ISO_USER/$USER/g" ${MOUNTPOINT}/etc/gshadow 2>>/tmp/.errlog
-	   sed -i "s/$ISO_USER/$USER/g" ${MOUNTPOINT}/etc/passwd 2>>/tmp/.errlog
-	   sed -i "s/$ISO_USER/$USER/g" ${MOUNTPOINT}/etc/shadow 2>>/tmp/.errlog
-	   mv ${MOUNTPOINT}/home/$ISO_USER ${MOUNTPOINT}/home/$USER 2>>/tmp/.errlog
-	   chown -R $USER:users ${MOUNTPOINT}/home/$USER 2>>/tmp/.errlog
-        
-	   # Change sudoers file to require passwords for sudo commands
-	   sed -i '/%wheel ALL=(ALL:ALL) ALL/s/^#//' ${MOUNTPOINT}/etc/sudoers 2>>/tmp/.errlog
-	   sed -i 's/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/#%wheel ALL=(ALL:ALL) NOPASSWD: ALL/g' ${MOUNTPOINT}/etc/sudoers 2>>/tmp/.errlog
-	   check_for_error
-	else
-	   # If the live account has already been changed, create a new user account
-	   arch_chroot "useradd ${USER} -m -g users -G wheel,storage,power,network,video,audio,lp -s /bin/bash" 2>/tmp/.errlog   
-	   arch_chroot "passwd ${USER}" < /tmp/.passwd >/dev/null 2>>/tmp/.errlog  
-     
-	   # Set up basic configuration files and ownership for new account
-	   arch_chroot "cp -R /etc/skel/ /home/${USER}" 2>>/tmp/.errlog
-	   arch_chroot "chown -R ${USER}:users /home/${USER}" 2>>/tmp/.errlog
+	# delete liveuser
+	arch_chroot "userdel -f -r ${ISO_USER}" 2>>/tmp/.errlog
+	
+	# Create a new user
+	arch_chroot "useradd ${USER} -m -g users -G wheel,storage,power,network,video,audio,lp,sys,optical,scanner,rfkill -s /bin/zsh" 2>/tmp/.errlog   
+	arch_chroot "passwd ${USER}" < /tmp/.passwd >/dev/null 2>>/tmp/.errlog  
+	
+	# Set up basic configuration files and ownership for new account
+	arch_chroot "cp -R /etc/skel/ /home/${USER}" 2>>/tmp/.errlog
+	arch_chroot "chown -R ${USER}:users /home/${USER}" 2>>/tmp/.errlog
+	
+	# Update gtk user directories bookmarks
+	arch_chroot "rm -f /home/${USER}/.config/gtk-3.0/bookmarks" 2>>/tmp/.errlog
+	arch_chroot "runuser -l ${USER} -c 'xdg-user-dirs-update'" 2>>/tmp/.errlog
+	arch_chroot "runuser -l ${USER} -c 'xdg-user-dirs-gtk-update'" 2>>/tmp/.errlog
+	
+	check_for_error
+    
+	# Change sudoers file to require passwords for sudo commands
+	sed -i '/%wheel ALL=(ALL:ALL) ALL/s/^#//' ${MOUNTPOINT}/etc/sudoers 2>>/tmp/.errlog
+	sed -i 's/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/#%wheel ALL=(ALL:ALL) NOPASSWD: ALL/g' ${MOUNTPOINT}/etc/sudoers 2>>/tmp/.errlog
+	check_for_error
 
-	   # Update gtk user directories bookmarks
-	   arch_chroot "rm -f /home/${USER}/.config/gtk-3.0/bookmarks" 2>>/tmp/.errlog
-	   arch_chroot "runuser -l ${USER} -c 'xdg-user-dirs-update'" 2>>/tmp/.errlog
-	   arch_chroot "runuser -l ${USER} -c 'xdg-user-dirs-gtk-update'" 2>>/tmp/.errlog
-
-	   check_for_error
-    fi
-       rm /tmp/.passwd
+    rm /tmp/.passwd
 }
 
 #_________ Generate Initramfs _________________________________#

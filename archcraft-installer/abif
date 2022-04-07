@@ -478,8 +478,8 @@ create_new_user() {
 	   chown -R $USER:users ${MOUNTPOINT}/home/$USER 2>>/tmp/.errlog
         
 	   # Change sudoers file to require passwords for sudo commands
-	   sed -i '/%wheel ALL=(ALL) ALL/s/^#//' ${MOUNTPOINT}/etc/sudoers 2>>/tmp/.errlog
-	   sed -i '/%wheel ALL=(ALL) ALL NOPASSWD: ALL/s/#%wheel ALL=(ALL) ALL NOPASSWD: ALL//' ${MOUNTPOINT}/etc/sudoers 2>>/tmp/.errlog
+	   sed -i '/%wheel ALL=(ALL:ALL) ALL/s/^#//' ${MOUNTPOINT}/etc/sudoers 2>>/tmp/.errlog
+	   sed -i 's/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/#%wheel ALL=(ALL:ALL) NOPASSWD: ALL/g' ${MOUNTPOINT}/etc/sudoers 2>>/tmp/.errlog
 	   check_for_error
 	else
 	   # If the live account has already been changed, create a new user account

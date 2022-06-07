@@ -13,4 +13,4 @@ if [[ -d "/run/archiso/copytoram" ]]; then
 fi
 
 ## Launch calamare installer accordingly
-pkexec calamares -d -style kvantum
+pkexec calamares -style kvantum

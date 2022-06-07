@@ -2,7 +2,7 @@ GRUB_DEFAULT=saved
 GRUB_TIMEOUT=10
 GRUB_RECORDFAIL_TIMEOUT=$GRUB_TIMEOUT
 GRUB_DISTRIBUTOR="Archcraft"
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash vt.global_cursor_default=0 loglevel=2 rd.systemd.show_status=false rd.udev.log-priority=3 sysrq_always_enabled=1"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash loglevel=3 udev.log_level=3 vt.global_cursor_default=0"
 GRUB_CMDLINE_LINUX=""
 
 # If you want to enable the save default function, uncomment the following

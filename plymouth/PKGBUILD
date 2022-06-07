@@ -6,7 +6,7 @@
 
 pkgname=plymouth
 pkgver=22.02.122
-pkgrel=2
+pkgrel=3
 pkgdesc="A graphical boot splash screen with kernel mode-setting support"
 url="https://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('i686' 'x86_64')
@@ -50,7 +50,7 @@ sha256sums=('8921cd61a9f32f5f8903ceffb9ab0defaef8326253e1549ef85587c19b7f2ab6'
             '95585143912e29189102bf5953a001ad4676fc5ec036525dd396f6caff3804ba'
             'dec28b86ddea93704f8479d33e08f81cd7ff4ccaad57e9053c23bd046db2278a'
             '74908ba59cea53c6a9ab67bb6dec1de1616f3851a0fd89bb3c157a1c54e6633a'
-            '5cc130aa9bfefb99071567c53378aab8626e4696d8cc8849c108b3544db2356f')
+            'feddc6d1fc950823fb9f71bd511314cb10a081d39c75be74eb87a9701b0d3b75')
 
 prepare() {
 	cd "$srcdir"/${pkgname}-${pkgver}

@@ -2,7 +2,7 @@
 
 pkgname="archcraft-hooks"
 pkgver=1.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Pacman hooks for Archcraft to fix various system files'
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')

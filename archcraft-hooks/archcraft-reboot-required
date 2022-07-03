@@ -7,6 +7,17 @@
 # - not currently running (e.g. alternative kernel)
 # - not in use (e.g. alternative driver)
 
+## ANSI Colors (FG & BG)
+RED="$(printf '\033[31m')"  GREEN="$(printf '\033[32m')"  ORANGE="$(printf '\033[33m')"  BLUE="$(printf '\033[34m')"
+MAGENTA="$(printf '\033[35m')"  CYAN="$(printf '\033[36m')"  WHITE="$(printf '\033[37m')" BLACK="$(printf '\033[30m')"
+
+## Reset terminal colors
+reset_color() {
+	tput sgr0   # reset attributes
+	tput op     # reset color
+    return
+}
+
 _notify_reboot_required() {
     local xx
 
@@ -28,7 +39,7 @@ _notify_reboot_required() {
         done
     else
         # at TTY
-        echo "Core system package upgraded, You need to reboot the machine." >&2
+		echo -e ${RED}"\n[*] Core system package upgraded, You need to reboot the machine.\n" >&2 && reset_color
     fi
 }
 

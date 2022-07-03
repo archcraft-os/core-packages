@@ -1,3 +1,6 @@
+/calamares/calamares-*
+/calamares/src
+/calamares/pkg
 /packages
 cleanup.sh
 push.sh

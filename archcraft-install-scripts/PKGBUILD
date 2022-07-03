@@ -2,7 +2,7 @@
 
 pkgname=archcraft-install-scripts
 pkgver=1.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Archcraft Install Scripts'
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')

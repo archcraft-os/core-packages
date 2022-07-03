@@ -2,7 +2,7 @@
 
 pkgname=calamares
 _pkgname=calamares
-pkgver=3.2.59
+pkgver=3.2.60
 pkgrel=1
 pkgdesc='Distribution-independent installer framework'
 arch=('i686' 'x86_64')
@@ -22,7 +22,7 @@ backup=('usr/share/calamares/modules/bootloader.conf'
 source=("$_pkgname-$pkgver::$url/download/v$pkgver/$_pkgname-$pkgver.tar.gz"
 	"49-nopasswd-calamares.rules")
 
-sha256sums=('55adef250613e80a868f2aa3d1e57bdae5b769387d91decf0fe2b64e3605574f'
+sha256sums=('9ec6c49f4e2316cd3058d402c2ab65efff02e3f09a0028d50f0359e5154e6c8c'
             '56d85ff6bf860b9559b8c9f997ad9b1002f3fccc782073760eca505e3bddd176')
 
 pkgver() {

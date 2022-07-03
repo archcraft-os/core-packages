@@ -8,7 +8,7 @@ Operation = Remove
 Type = Path
 Target = usr/bin/*
 [Action]
-Description = Updaing executables in /usr/bin...
+Description = Updating executables in /usr/bin...
 Depends = zsh
 When = PostTransaction
 Exec = /usr/bin/install -Dm644 /dev/null /var/cache/zsh/pacman

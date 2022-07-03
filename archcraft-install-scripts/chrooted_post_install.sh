@@ -297,11 +297,11 @@ _perform_various_stuff() {
 	fi
 
 	# disabling autologin for sddm (if exist)
-	sddm_config='/etc/sddm.conf.d/autologin.conf'
+	sddm_config='/etc/sddm.conf.d/kde_settings.conf'
 	if [[ -e "$sddm_config" ]]; then
 		echo "+---------------------->>"
 		echo "[*] Disabling autologin for sddm..."
-		rm -rf "$sddm_config"
+		sed -i -e 's/User=.*/#User=username/g' "$sddm_config"
 	fi
 
 	# Fix btrfs disk IO on kernel 5.16.x

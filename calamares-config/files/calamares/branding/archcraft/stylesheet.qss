@@ -10,16 +10,15 @@
 
 /*------------------------ Bottom Buttons -----------------*/
 
-QPushButton#debugButton {
-	color: #5294E2;
-    background-color: #1A5294E2;
+#debugButton, #aboutButton {
     border-style: solid;
     font: bold 12px;
     padding: 8px;
 }
 
-QPushButton#view-button-back,#view-button-next,#view-button-cancel {
-/*	color: #C4C7C5;	*/
+#view-button-back,
+#view-button-next,
+#view-button-cancel {
     background-color: #444A58;
     border: 1px solid #1E2128;
     border-radius: 2px;
@@ -28,7 +27,9 @@ QPushButton#view-button-back,#view-button-next,#view-button-cancel {
     padding: 8px;
 }
 
-QPushButton#view-button-back:hover,#view-button-next:hover,#view-button-cancel:hover {
+#view-button-back:hover,
+#view-button-next:hover,
+#view-button-cancel:hover {
 	color: #FFFFFF;
     background-color: #505666;
     border-style: solid;
@@ -38,40 +39,45 @@ QPushButton#view-button-back:hover,#view-button-next:hover,#view-button-cancel:h
 
 #aboutButton { 
 	qproperty-icon: url(/etc/calamares/branding/archcraft/icons/about.svg);
-    font: bold 12px;
-    min-width: 2em;
-    padding: 8px;
+}
+
+#debugButton { 
+	qproperty-icon: url(/etc/calamares/branding/archcraft/icons/about.svg);
 }
 
 #donateButton { 
 	qproperty-icon: url(/etc/calamares/branding/archcraft/icons/donate.svg);
-    font: bold 12px;
-    min-width: 2em;
-    padding: 8px;
 }
 
 #supportButton {
 	qproperty-icon: url(/etc/calamares/branding/archcraft/icons/fourm.svg);
-    font: bold 12px;
-    min-width: 2em;
-    padding: 8px;
 }
 
 #releaseNotesButton {
 	qproperty-icon: url(/etc/calamares/branding/archcraft/icons/notes.svg);
-    font: bold 12px;
-    min-width: 2em;
-    padding: 8px;
 }
 
 #knownIssuesButton {
 	qproperty-icon: url(/etc/calamares/branding/archcraft/icons/issues.svg);
+}
+
+#debugButton,
+#aboutButton,
+#donateButton,
+#supportButton,
+#releaseNotesButton,
+#knownIssuesButton {
     font: bold 12px;
     min-width: 2em;
     padding: 8px;
 }
 
-#aboutButton:hover,#donateButton:hover,#supportButton:hover,#releaseNotesButton:hover,#knownIssuesButton:hover {
+#debugButton:hover,
+#aboutButton:hover,
+#donateButton:hover,
+#supportButton:hover,
+#releaseNotesButton:hover,
+#knownIssuesButton:hover {
 	color: #5294E2;
     border-style: solid;
     border-width: 0px;

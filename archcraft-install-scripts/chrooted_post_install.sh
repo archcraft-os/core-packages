@@ -301,7 +301,14 @@ _perform_various_stuff() {
 	if [[ -e "$sddm_config" ]]; then
 		echo "+---------------------->>"
 		echo "[*] Disabling autologin for sddm..."
-		sed -i -e 's/User=.*/#User=username/g' "$sddm_config"
+		sed -i -e 's/User=liveuser/#User=username/g' "$sddm_config"
+	fi
+
+	# Setting openbox as default session
+	sddm_state='/var/lib/sddm/state.conf'
+	if [[ -e "$sddm_state" ]]; then
+		sed -i -e "s/User=.*/User=$new_user/g" "$sddm_state"
+		sed -i -e 's#Session=.*#Session=/usr/share/xsessions/openbox.desktop#g' "$sddm_state"
 	fi
 
 	# Fix btrfs disk IO on kernel 5.16.x

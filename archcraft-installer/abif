@@ -1907,7 +1907,7 @@ edit_configs() {
    "7" "/etc/fstab" \
    "8" "/etc/crypttab" \
    "9" "grub/syslinux/systemd-boot" \
-   "10" "/etc/sddm.conf.d/theme.conf" \
+   "10" "/etc/sddm.conf.d/kde_settings.conf" \
    "11" "/etc/pacman.conf" \
    "12" "$_Back" 2>${ANSWER}
 	
@@ -1939,7 +1939,7 @@ edit_configs() {
 				done
 			 fi
             ;;
-        "10") [[ -e ${MOUNTPOINT}/etc/sddm.conf.d/theme.conf ]] && FILE="${MOUNTPOINT}/etc/sddm.conf.d/theme.conf" 
+        "10") [[ -e ${MOUNTPOINT}/etc/sddm.conf.d/kde_settings.conf ]] && FILE="${MOUNTPOINT}/etc/sddm.conf.d/kde_settings.conf" 
             ;;
         "11") [[ -e ${MOUNTPOINT}/etc/pacman.conf ]] && FILE="${MOUNTPOINT}/etc/pacman.conf"
 			;;

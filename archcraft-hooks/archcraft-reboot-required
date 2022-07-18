@@ -43,7 +43,7 @@ _notify_reboot_required() {
         done
     else
         # at TTY
-		echo -e ${BRed}"\n[*] Core system package upgraded, You need to reboot the machine.\n" >&2 && ${Color_Off}
+		echo -e ${BRed}"\n[*] Core system package upgraded, You need to reboot the machine.\n"${Color_Off} >&2
     fi
 }
 

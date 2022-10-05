@@ -1,0 +1,48 @@
+#!/bin/bash
+
+## Copyright (C) 2020-2022 Aditya Shakya <adi1090x@gmail.com>
+## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
+
+## Perform various operations for Archcraft
+
+fix_openbox() {
+	## Set black background for openbox
+	sed -i -e 's#test -z $BG || $BG -solid .*#test -z $BG || $BG -solid "\#000000"#g' /usr/lib/openbox/openbox-autostart
+	rm -rf /usr/share/xsessions/openbox-kde.desktop
+}
+
+fix_thunar() {
+	## Remove thunar wallpaper plugin
+	twplug='/usr/lib/thunarx-3/thunar-wallpaper-plugin.so'
+	if [[ -e "$twplug" ]]; then
+		rm -rf "$twplug"
+	fi
+}
+
+fix_nmd() {
+	## Create nmd script for bspwm session
+	cp -rf /usr/bin/networkmanager_dmenu /usr/local/bin/nmd && sed -i -e 's/config.ini/nmd.ini/g' /usr/local/bin/nmd
+}
+
+fix_grub() {
+	## Fix GRUB_DISTRIBUTOR for Archcraft
+	sed -i -e 's/GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="Archcraft"/g' /etc/default/grub
+	cat /etc/grub.d/10_linux | grep 'OS="${GRUB_DISTRIBUTOR} Linux"' &>/dev/null
+	if [[ "$?" == 0 ]]; then
+		sed -i -e 's/OS="${GRUB_DISTRIBUTOR} Linux"/OS="${GRUB_DISTRIBUTOR}"/g' /etc/grub.d/10_linux
+	fi
+}
+
+main() {
+    local hookname="$1"
+
+    case "$hookname" in
+        fix-openbox)  fix_openbox ;;
+        fix-thunar)   fix_thunar ;;
+        fix-nmd)      fix_nmd ;;
+        fix-grub)     fix_grub ;;
+        "")           echo "Nothing to do!";;
+    esac
+}
+
+main "$@"

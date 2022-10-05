@@ -3,6 +3,8 @@ From: Colin Watson <cjwatson@ubuntu.com>
 Date: Mon, 13 Jan 2014 12:13:26 +0000
 Subject: Add configure option to reduce visual clutter at boot time
 
+Modified for Archcraft By : Aditya Shakya <adi1090x@github.com>
+
 If this option is enabled, then do all of the following:
 
 Don't display introductory message about line editing unless we're
@@ -202,7 +204,7 @@ diff --git a/grub-core/boot/i386/pc/diskboot.S b/grub-core/boot/i386/pc/diskboot
 diff --git a/grub-core/kern/main.c b/grub-core/kern/main.c
 --- a/grub-core/kern/main.c
 +++ b/grub-core/kern/main.c
-@@ -264,15 +264,25 @@ reclaim_module_space (void)
+@@ -265,13 +265,23 @@ reclaim_module_space (void)
  void __attribute__ ((noreturn))
  grub_main (void)
  {
@@ -215,20 +217,19 @@ diff --git a/grub-core/kern/main.c b/grub-core/kern/main.c
  
    grub_boot_time ("After machine init.");
  
-+#ifdef QUIET_BOOT
 +  /* Disable the cursor until we need it.  */
++#ifdef QUIET_BOOT
 +  FOR_ACTIVE_TERM_OUTPUTS(term)
 +    grub_term_setcursor (term, 0);
-+#else
++#endif
++
+   /* This breaks flicker-free boot on EFI systems, so disable it there. */
+-#ifndef GRUB_MACHINE_EFI
++#if !defined GRUB_MACHINE_EFI || !defined QUIET_BOOT
    /* Hello.  */
    grub_setcolorstate (GRUB_TERM_COLOR_HIGHLIGHT);
    grub_printf ("Welcome to GRUB!\n\n");
-   grub_setcolorstate (GRUB_TERM_COLOR_STANDARD);
-+#endif
- 
-   grub_load_config ();
- 
-@@ -308,5 +318,12 @@ grub_main (void)
+@@ -315,5 +325,12 @@ grub_main (void)
    grub_boot_time ("After execution of embedded config. Attempt to go to normal mode");
  
    grub_load_normal_mode ();
@@ -286,37 +287,32 @@ diff --git a/grub-core/normal/main.c b/grub-core/normal/main.c
 diff --git a/grub-core/normal/menu.c b/grub-core/normal/menu.c
 --- a/grub-core/normal/menu.c
 +++ b/grub-core/normal/menu.c
-@@ -826,12 +826,18 @@ run_menu (grub_menu_t menu, int nested, int *auto_boot)
- 
- /* Callback invoked immediately before a menu entry is executed.  */
- static void
--notify_booting (grub_menu_entry_t entry,
-+notify_booting (grub_menu_entry_t entry
-+#ifdef QUIET_BOOT
-+		__attribute__((unused))
-+#endif
-+		,
- 		void *userdata __attribute__((unused)))
+@@ -814,12 +814,14 @@ notify_booting (grub_menu_entry_t entry,
  {
+   int *notify_boot = userdata;
+ 
 +#ifndef QUIET_BOOT
-   grub_printf ("  ");
-   grub_printf_ (N_("Booting `%s'"), entry->title);
-   grub_printf ("\n\n");
+   if (*notify_boot)
+     {
+       grub_printf ("  ");
+       grub_printf_ (N_("Booting `%s'"), entry->title);
+       grub_printf ("\n\n");
+     }
 +#endif
  }
  
  /* Callback invoked when a default menu entry executed because of a timeout
-@@ -879,6 +885,9 @@ show_menu (grub_menu_t menu, int nested, int autobooted)
-       int boot_entry;
+@@ -868,6 +868,9 @@ show_menu (grub_menu_t menu, int nested,
        grub_menu_entry_t e;
        int auto_boot;
+       int notify_boot;
 +#ifdef QUIET_BOOT
 +      int initial_timeout = grub_menu_get_timeout ();
 +#endif
  
-       boot_entry = run_menu (menu, nested, &auto_boot);
+       boot_entry = run_menu (menu, nested, &auto_boot, &notify_boot);
        if (boot_entry < 0)
-@@ -888,7 +897,11 @@ show_menu (grub_menu_t menu, int nested, int autobooted)
+@@ -877,7 +880,11 @@ show_menu (grub_menu_t menu, int nested,
        if (! e)
  	continue; /* Menu is empty.  */
  

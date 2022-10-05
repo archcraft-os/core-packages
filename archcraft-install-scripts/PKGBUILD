@@ -1,20 +1,18 @@
 # Maintainer: Aditya Shakya <@adi1090x>
 
 pkgname=archcraft-install-scripts
-pkgver=1.0
-pkgrel=5
+pkgver=2.0
+pkgrel=0
 pkgdesc='Archcraft Install Scripts'
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')
 license=('GPL3')
 
-source=(
-		'chrooted_post_install.sh'
-		'post_install.sh'
-)
+source=('chrooted_post_install.sh'
+		'post_install.sh')
 
-sha512sums=('f8e257f3a901d262723fa005e26749f500b37b291271cd4d3b24a111a9ef78d6418929096041601fcd1e0bfc67b73adecb4d14efa3be2da17bd9e73f3b6d28e0'
-            '001e216a84bb8646f414b9846e94ece00ca07ee298bcf7335bbdca587a42041b31f90d8d5aaf17f0de869950a3ffe1122428c1e71584bcb22191dcc3d1a2e0aa')
+sha512sums=('93151e28b86f74812c0141cb795b00882a1bc7942932f7c946ed0a40e4f9556fc1d6e3ac7c5b88bf853f68a1a542b6f4298c6ae6b576f2fe21af7b9ced6ec233'
+            '2d838f82cbc39bda6137d3428e16be01f4b8a614315a1de4f00dfef601decfde994fdf5885bc1b298260bb813440541b2366766204265a8e4a9b5b5fc831fd24')
 
 package() {
 	local bin=${pkgdir}/usr/bin

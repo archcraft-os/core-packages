@@ -1,8 +1,8 @@
 # Maintainer: Aditya Shakya <adi1090x@gmail.com>
 
 pkgname="archcraft-mirrorlist"
-pkgver=1.0
-pkgrel=2
+pkgver=2.0
+pkgrel=0
 pkgdesc='Archcraft mirrorlist'
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')
@@ -10,7 +10,7 @@ license=('GPL3')
 
 source=($pkgname)
 
-sha512sums=('05fa4201a9c1d3699e339927b98fce1a92568627662fe7318e229e644e399576b89983bb6271997a27f2d2d32fbc4bbfec3d822f9d6327168793841633e4d97b')
+sha512sums=('231fcef8cc0fa8dafc598522aadbdeba87931c04cb1018d6a4ae39de11542fa30f8df1fda019f1d8b4fef58747a8a1dbda2ce8c406f5447a49926a41c199fd76')
 
 package() {
 	install -Dm644 ${pkgname}  ${pkgdir}/etc/pacman.d/${pkgname}

@@ -1,8 +1,8 @@
 # Maintainer: Aditya Shakya <adi1090x@gmail.com>
 
 pkgname=calamares-config
-pkgver=1.0
-pkgrel=6
+pkgver=2.0
+pkgrel=0
 pkgdesc="Calamares configuration for Archcraft."
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')

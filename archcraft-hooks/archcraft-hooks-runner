@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Copyright (C) 2020-2021 Aditya Shakya <adi1090x@gmail.com>
+## Copyright (C) 2020 Aditya Shakya <adi1090x@gmail.com>
 ## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
 
 ## Run `archcraft-hooks` related commands.
@@ -42,15 +42,32 @@ fix_os_release() {
     sed -i 's|Arch Linux|Archcraft|g' /etc/issue /usr/share/factory/etc/issue
 }
 
-main()
-{
+fix_pixmaps() {
+	## Remove Arch Linux artworks
+	imgs=('archlinux-logo.png'
+		  'archlinux-logo.svg'
+		  'archlinux-logo-text.svg'
+		  'archlinux-logo-text-dark.svg'
+		  'archlinux.png'
+		  'archlinux.svg')
+	
+	for img in "${imgs[@]}"; do
+		if [[ -e /usr/share/pixmaps/"$img" ]]; then 
+			rm -rf /usr/share/pixmaps/"$img"
+		fi
+	done	
+}
+
+main() {
     local hookname="$1"
 
     case "$hookname" in
         os-release)  fix_os_release ;;
         lsb-release) fix_lsb_release ;;
+        fix-pixmaps) fix_pixmaps ;;
         "")          fix_os_release
                      fix_lsb_release
+                     fix_pixmaps
                      ;;
     esac
 }

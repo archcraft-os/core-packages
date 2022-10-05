@@ -1,0 +1,58 @@
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -285,7 +285,7 @@
+ 	boot_device_id="$(grub_get_device_id "${GRUB_DEVICE}")"
+     fi
+     # TRANSLATORS: %s is replaced with an OS name
+-    echo "submenu '$(gettext_printf "Advanced options for %s" "${OS}" | grub_quote)' \$menuentry_id_option 'gnulinux-advanced-$boot_device_id' {"
++    echo "submenu '$(gettext_printf "Advanced options for %s" "${OS}" | grub_quote)' --class recovery \$menuentry_id_option 'gnulinux-advanced-$boot_device_id' {"
+     is_top_level=false
+   fi
+ 
+--- a/util/grub.d/30_os-prober.in
++++ b/util/grub.d/30_os-prober.in
+@@ -152,7 +152,7 @@
+ 
+ 	  onstr="$(gettext_printf "(on %s)" "${DEVICE}")"
+       cat << EOF
+-menuentry '$(echo "${LONGNAME} $onstr" | grub_quote)' $CLASS --class os \$menuentry_id_option 'osprober-chain-$(grub_get_device_id "${DEVICE}")' {
++menuentry '$(echo "${LONGNAME} $onstr" | grub_quote)' $CLASS --class windows --class os \$menuentry_id_option 'osprober-chain-$(grub_get_device_id "${DEVICE}")' {
+ EOF
+       save_default_entry | grub_add_tab
+       prepare_grub_to_access_device ${DEVICE} | grub_add_tab
+@@ -184,7 +184,7 @@
+ 	DEVICE=${DEVICE%@*}
+ 	onstr="$(gettext_printf "(on %s)" "${DEVICE}")"
+       cat << EOF
+-menuentry '$(echo "${LONGNAME} $onstr" | grub_quote)' $CLASS --class os \$menuentry_id_option 'osprober-efi-$(grub_get_device_id "${DEVICE}")' {
++menuentry '$(echo "${LONGNAME} $onstr" | grub_quote)' $CLASS --class windows --class os \$menuentry_id_option 'osprober-efi-$(grub_get_device_id "${DEVICE}")' {
+ EOF
+       save_default_entry | sed -e "s/^/\t/"
+       prepare_grub_to_access_device ${DEVICE} | sed -e "s/^/\t/"
+
+--- a/util/grub.d/30_uefi-firmware.in
++++ b/util/grub.d/30_uefi-firmware.in
+@@ -37,7 +37,7 @@
+   gettext_printf "Adding boot menu entry for UEFI Firmware Settings ...\n" >&2
+ 
+   cat << EOF
+-menuentry '$LABEL' \$menuentry_id_option 'uefi-firmware' {
++menuentry '$LABEL' --class efi \$menuentry_id_option 'uefi-firmware' {
+ 	fwsetup
+ }
+ EOF
+
+--- a/util/grub.d/40_custom.in
++++ b/util/grub.d/40_custom.in
+@@ -3,3 +3,11 @@
+ # This file provides an easy way to add custom menu entries.  Simply type the
+ # menu entries you want to add after this comment.  Be careful not to change
+ # the 'exec tail' line above.
++
++menuentry 'Reboot Computer' --class restart {
++    reboot
++}
++
++menuentry 'Shutdown Computer' --class shutdown {
++    halt
++}

@@ -1,0 +1,35 @@
+# Maintainer: Aditya Shakya <adi1090x@gmail.com>
+
+pkgname="archcraft-hooks-extra"
+pkgver=2.0
+pkgrel=0
+pkgdesc='Extra pacman hooks for Archcraft'
+url="https://github.com/archcraft-os/core-packages"
+arch=('any')
+license=('GPL3')
+
+source=(
+		'archcraft-hook-grub.hook'
+		'archcraft-hook-nm.hook'
+		'archcraft-hook-openbox.hook'
+		'archcraft-hook-thunar.hook'
+		'archcraft-hooks-extra'
+)
+
+sha512sums=('730ac2a682f0b47381972cb3363579df67397a7af828867a7f77d8f898221951efb10ae17c98e5b7b0bc366f2a63a1bb2ad9e11e568dd3843e5cb153c699e7b5'
+            'd547973b2af1cc0a1a14be4ff12a8587e69a403370e29f8a0662983696fd8bd0755d838a2d26c41da0b22d1b2051b704d372aadbf0a870d8b2533b8e8a2ceb93'
+            'ab59dc5ab52fcda9b23e605a9bbe28098cc326ba23664e7d8a4561a8e35cceeec937907668e4ca6a7899e16f86fc1e70abc79a83508d8704db51abbd58d096a5'
+            'f5b40d881c89e8f304f1c7e21690c2e4b2a352547b465584b7ece61c7a568aa86d3fffc131be79f7ab8ca3b7b788133fc95a76944606be99249803f8b0b55d3c'
+            '0a5c3dde13dc4a5800e8663445bcce9879b9a1c408f01a2d33b12512353bfb1378ebe01bf00f59bf9093a3317e7eb400e62733094564c62fe04e4ef7df4c2c05')
+
+package() {
+  local hooks=${pkgdir}/usr/share/libalpm/hooks
+  local bin=${pkgdir}/usr/bin
+
+  install -Dm644 archcraft-hook-grub.hook  			"$hooks"/archcraft-hook-grub.hook
+  install -Dm644 archcraft-hook-nm.hook  			"$hooks"/archcraft-hook-nm.hook
+  install -Dm644 archcraft-hook-openbox.hook  		"$hooks"/archcraft-hook-openbox.hook
+  install -Dm644 archcraft-hook-thunar.hook  		"$hooks"/archcraft-hook-thunar.hook
+
+  install -Dm755 archcraft-hooks-extra       		"$bin"/archcraft-hooks-extra
+}

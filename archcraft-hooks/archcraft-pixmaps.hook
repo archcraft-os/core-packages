@@ -8,6 +8,6 @@ Type = Package
 Target = filesystem
 
 [Action]
-Description = Updating Archcraft OS-Specific Configurations...
+Description = Updating Archcraft Pixmaps...
 When = PostTransaction
-Exec = /usr/bin/archcraft-hooks-runner os-release
+Exec = /usr/bin/archcraft-hooks-runner fix-pixmaps

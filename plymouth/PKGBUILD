@@ -6,7 +6,7 @@
 
 pkgname=plymouth
 pkgver=22.02.122
-pkgrel=4
+pkgrel=5
 pkgdesc="A graphical boot splash screen with kernel mode-setting support"
 url="https://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('i686' 'x86_64')

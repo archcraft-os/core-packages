@@ -2,7 +2,7 @@
 
 pkgname=archcraft-install-scripts
 pkgver=2.0
-pkgrel=0
+pkgrel=1
 pkgdesc='Archcraft Install Scripts'
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')
@@ -11,8 +11,8 @@ license=('GPL3')
 source=('chrooted_post_install.sh'
 		'post_install.sh')
 
-sha512sums=('93151e28b86f74812c0141cb795b00882a1bc7942932f7c946ed0a40e4f9556fc1d6e3ac7c5b88bf853f68a1a542b6f4298c6ae6b576f2fe21af7b9ced6ec233'
-            '2d838f82cbc39bda6137d3428e16be01f4b8a614315a1de4f00dfef601decfde994fdf5885bc1b298260bb813440541b2366766204265a8e4a9b5b5fc831fd24')
+sha512sums=('3c6061b3cb88a3f3965565ccc7bf8a21ebf275749a85b5668405a47c8e0323b34890cafb660b4cd507763e8f4aff64471fe4cd03dd6fbbb36009ad8d4f8c8c63'
+            '8e7c614c498e5e3562d98a95d2c67c86a2569e9096ab7a650b0d0dd316ee1f985b406fc5b729bf1e682abd59e3d0b316e7e03b80bd78b5b5a1731bdac3ea7abe')
 
 package() {
 	local bin=${pkgdir}/usr/bin

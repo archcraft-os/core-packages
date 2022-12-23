@@ -1,8 +1,7 @@
 #!/bin/bash
 
 ## Copyright (C) 2020-2022 Aditya Shakya <adi1090x@gmail.com>
-## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
-
+##
 ## Post installation script for Archcraft (Executes on live system, only to detect drivers in use)
 
 ##--------------------------------------------------------------------------------

@@ -1,6 +1,8 @@
 /calamares/calamares-*
-/calamares/src
-/calamares/pkg
+/grub/gnulib
+/grub/grub
+/grub/grub-extras
+/grub/unifont-* 
 /packages
 cleanup.sh
 push.sh

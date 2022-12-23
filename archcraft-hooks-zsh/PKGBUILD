@@ -2,7 +2,7 @@
 
 pkgname="archcraft-hooks-zsh"
 pkgver=1.0
-pkgrel=0
+pkgrel=1
 pkgdesc='ZSH hook for Archcraft'
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')
@@ -10,7 +10,7 @@ license=('GPL3')
 
 source=('archcraft-hook-zsh.hook')
 
-sha512sums=('9358eb29984b68d847b13cd1fa76564bf64149cdd8e71657e1483973070e26dd8b6ccece18545e18bb04497447762d14f95baafc60a364e6c7a0721d7a452c85')
+sha512sums=('bee274ab6b0dd162cbc56b49a2d3489cef36440cb51c70d5844c1a02bf07f497433d61ad3313c0f6b38ae128b28fa55a191262658a87c5bd77be99bcc1184c66')
 
 package() {
   local hooks=${pkgdir}/usr/share/libalpm/hooks

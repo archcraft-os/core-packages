@@ -2,7 +2,7 @@
 
 pkgname=archcraft-installer
 pkgver=2.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Command line installer for Archcraft for expert users."
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')
@@ -25,9 +25,9 @@ source=(
 		russian.trans
 		spanish.trans)
 
-sha256sums=('ba746bc9d1e96a7f41aa9930ab88ba501719329857a5e33a189b9550c0c85582'
+sha256sums=('439cece0c57580018999adc7637005cd202160aaa366b4c013c208d9cbb1a38b'
             '6a7e0c36892ffae79aaaebd257c3a6d2913c54ec8376e7d6fdd419b4e5ea958c'
-            'dec583d174d0079d305664144c67687b5f7895105d5c46057dabb46bf5a27c29'
+            '6541422e269383492b9055e5b0e50a75c3057a9551253143572b5f976b2dc056'
             '62fbb7fa46bc724bf1a2de88361e8257503551ab0b472643ce9cdddd1079185f'
             '4881e9576968070ace22d20aa2773d59997a3ab847e66824858dfe3d3dc88596'
             'ba58c00b7b026fa1cee1fdcf592549a6ad88e795d0120cd67861c0dddfd2aff1'

@@ -1,8 +1,7 @@
 #!/bin/bash
 
 ## Copyright (C) 2020 Aditya Shakya <adi1090x@gmail.com>
-## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
-
+##
 ## Run `archcraft-hooks` related commands.
 
 fix_lsb_release() {

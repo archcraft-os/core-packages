@@ -2,7 +2,7 @@
 
 pkgname=calamares-config
 pkgver=2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Calamares configuration for Archcraft."
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')

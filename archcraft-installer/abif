@@ -501,7 +501,7 @@ run_mkinitcpio() {
     check_for_error
 	
 	# Remove archiso hooks from install
-    sed -i 's/archiso archiso_loop_mnt archiso_kms/autodetect/g' ${MOUNTPOINT}/etc/mkinitcpio.conf 2>/tmp/.errlog
+    sed -i 's/kms archiso archiso_loop_mnt/autodetect/g' ${MOUNTPOINT}/etc/mkinitcpio.conf 2>/tmp/.errlog
 
 	# Add fsck hook
     sed -i 's/keyboard/keyboard fsck/g' ${MOUNTPOINT}/etc/mkinitcpio.conf 2>/tmp/.errlog

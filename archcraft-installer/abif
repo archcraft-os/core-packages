@@ -1491,6 +1491,13 @@ install_root(){
   # copy over new mirrorlist
   cp /etc/pacman.d/mirrorlist ${MOUNTPOINT}/etc/pacman.d/mirrorlist 2>>/tmp/.errlog
   
+  ############# Running Nvidia Post Installation scripts #############
+  echo -e "---- Nvidia Post Install Script ----------------------------------\n" &>>/tmp/.scriptlog
+  /bin/bash -c /usr/bin/post_install_nvidia.sh &>>/tmp/.scriptlog
+
+  echo -e "\n---- Nvidia Chrooted Post Install Script -------------------------\n" &>>/tmp/.scriptlog
+  arch_chroot "/bin/bash -c /usr/bin/chrooted_post_install_nvidia.sh" &>>/tmp/.scriptlog
+
   ############# Running post installation scripts #############
 
   echo -e "---- Post Install Script ----------------------------------\n" &>>/tmp/.scriptlog

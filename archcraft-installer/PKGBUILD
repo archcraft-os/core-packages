@@ -1,8 +1,8 @@
 # Maintainer: Aditya Shakya <adi1090x@gmail.com>
 
 pkgname=archcraft-installer
-pkgver=2.0
-pkgrel=3
+pkgver=3.0
+pkgrel=0
 pkgdesc="Command line installer for Archcraft for expert users."
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')
@@ -25,7 +25,7 @@ source=(
 		russian.trans
 		spanish.trans)
 
-sha256sums=('885b43aca6bdbd1dfe810fc030bc34a1ae533896057b8cc5d39ada01526a011d'
+sha256sums=('93c537a69c8d35e5f9e33998595245616d2e79074bcc998af521112600dbd0c9'
             '6a7e0c36892ffae79aaaebd257c3a6d2913c54ec8376e7d6fdd419b4e5ea958c'
             '6541422e269383492b9055e5b0e50a75c3057a9551253143572b5f976b2dc056'
             '62fbb7fa46bc724bf1a2de88361e8257503551ab0b472643ce9cdddd1079185f'

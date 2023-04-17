@@ -310,20 +310,6 @@ _perform_various_stuff() {
 		sed -i -e 's#Session=.*#Session=/usr/share/xsessions/openbox.desktop#g' "$sddm_state"
 	fi
 
-	# Fix btrfs disk IO on kernel 5.16.x
-	fstab_file='/etc/fstab'
-	if [[ `uname -r` == 5.16.* ]]; then
-		echo "+---------------------->>"
-		echo -e "Kernel Version : `uname -r`"
-		cat "$fstab_file" | grep 'btrfs' &>/dev/null
-		if [[ "$?" == 0 ]] ; then
-			echo -e "Filesystem Type : btrfs"
-			echo -e "Fixing 'large amount of disk IO in btrfs' issue for kernel version : `uname -r`"
-			sed -i -e 's/,autodefrag/,noautodefrag/g' "$fstab_file"
-			echo -e "\n# btrfs disk IO fix by replacing 'autodefrag' by 'noautodefrag' for kernel version : `uname -r`" >> "$fstab_file"
-		fi
-	fi
-
 	# Perform various operations
 	echo "+---------------------->>"
 	echo "[*] Running operations as new user : ${new_user}..."

@@ -32,12 +32,20 @@ fix_grub() {
 	fi
 }
 
+fix_i3wm() {
+	dfile='/usr/share/xsessions/i3-with-shmlog.desktop'
+	if [[ -e "$dfile" ]]; then
+		rm -rf "$dfile"
+	fi
+}
+
 main() {
     local hookname="$1"
 
     case "$hookname" in
         fix-openbox)  fix_openbox ;;
         fix-thunar)   fix_thunar ;;
+        fix-i3wm)     fix_i3wm ;;
         fix-nmd)      fix_nmd ;;
         fix-grub)     fix_grub ;;
         "")           echo "Nothing to do!";;

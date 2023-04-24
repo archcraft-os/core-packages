@@ -2,7 +2,7 @@
 
 pkgname="archcraft-hooks-extra"
 pkgver=2.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Extra pacman hooks for Archcraft'
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')
@@ -29,6 +29,7 @@ package() {
   local bin=${pkgdir}/usr/bin
 
   install -Dm644 archcraft-hook-grub.hook  			"$hooks"/archcraft-hook-grub.hook
+  install -Dm644 archcraft-hook-i3wm.hook  			"$hooks"/archcraft-hook-i3wm.hook
   install -Dm644 archcraft-hook-nm.hook  			"$hooks"/archcraft-hook-nm.hook
   install -Dm644 archcraft-hook-openbox.hook  		"$hooks"/archcraft-hook-openbox.hook
   install -Dm644 archcraft-hook-thunar.hook  		"$hooks"/archcraft-hook-thunar.hook

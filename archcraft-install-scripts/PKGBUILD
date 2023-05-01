@@ -2,7 +2,7 @@
 
 pkgname=archcraft-install-scripts
 pkgver=2.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Archcraft Install Scripts'
 url="https://github.com/archcraft-os/core-packages"
 arch=('any')
@@ -11,12 +11,16 @@ license=('GPL3')
 source=('chrooted_post_install.sh'
 		'chrooted_post_install_nvidia.sh'
 		'post_install.sh'
-		'post_install_nvidia.sh')
+		'post_install_nvidia.sh'
+		'main_fix_autologin.sh'
+		'main_post_install.sh')
 
 sha512sums=('997d1c955aab1162976f481b762ef13347dda776dc2c6cd29163d8ab744ec33b5a36506ef30d052cab1e4ac6a900941ad8a7ddd99d10c2fab256beb2840b3c9d'
             'daab0a36c8edc3e403956574579ed6e141ce6ae414b8c950679f03e22ab13eeb62a0f6fcdb10dbbd2cf55725c5994469bff8fef8c712374fd091ecb28d9e84d1'
             '8e7c614c498e5e3562d98a95d2c67c86a2569e9096ab7a650b0d0dd316ee1f985b406fc5b729bf1e682abd59e3d0b316e7e03b80bd78b5b5a1731bdac3ea7abe'
-            '4d2bb169103daa510ef50954ee953f60111feb0e7ea5f7e27215fe21ae2328fae3fdc91e3c02841384532beeae783210aaaad073e914088f4b5026ed85aea3e1')
+            '4d2bb169103daa510ef50954ee953f60111feb0e7ea5f7e27215fe21ae2328fae3fdc91e3c02841384532beeae783210aaaad073e914088f4b5026ed85aea3e1'
+            'c013e15fb847bf8eef0aa599e90c843a7c3d8d28dd6d3e62262368b14614a394e65275b2ffd53d7b1498e7561b67d56c8851081c09564885c96487439f22775d'
+            'e7c0a23f9c9733b853e15b39cf8e113918cef64256c9dd180b98b29cbf750ce7c2abe8d65ebd1f2d40c2dc30adf0e6dde517c2ed205b9ace92065288c78f71ac')
 
 package() {
 	local bin=${pkgdir}/usr/bin
@@ -25,4 +29,6 @@ package() {
 	install -Dm755 chrooted_post_install_nvidia.sh 	${bin}/chrooted_post_install_nvidia.sh
 	install -Dm755 post_install.sh 					${bin}/post_install.sh
 	install -Dm755 post_install_nvidia.sh 			${bin}/post_install_nvidia.sh
+	install -Dm755 main_fix_autologin.sh 			${bin}/main_fix_autologin.sh
+	install -Dm755 main_post_install.sh 			${bin}/main_post_install.sh
 }

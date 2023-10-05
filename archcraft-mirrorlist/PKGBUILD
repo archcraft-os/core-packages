@@ -2,16 +2,14 @@
 
 pkgname="archcraft-mirrorlist"
 pkgver=2.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Archcraft mirrorlist'
-url="https://github.com/archcraft-os/core-packages"
 arch=('any')
+url="https://github.com/archcraft-os/core-packages"
 license=('GPL3')
-
-source=($pkgname)
-
+source=("$pkgname")
 sha512sums=('04145afb3064e546a65991f5c15ded842cc67264126a5d51d9be81c9fa15356d12c8aec07ae88c95615f9cedd066eb364bddf5dd5a19d766024dc5ac3fbaf465')
 
 package() {
-	install -Dm644 ${pkgname}  ${pkgdir}/etc/pacman.d/${pkgname}
+	install -Dm 644 "$pkgname"  "$pkgdir"/etc/pacman.d/"$pkgname"
 }

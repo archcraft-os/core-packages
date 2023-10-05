@@ -9,17 +9,21 @@ post_install() {
   fi
 
   cat <<EOM
-:: Generate your bootloader configuration with:
-     grub-mkconfig -o /boot/grub/grub.cfg
+:: Install your bootloader and generate configuration:
+     UEFI: https://wiki.archlinux.org/title/GRUB#Installation
+     BIOS: https://wiki.archlinux.org/title/GRUB#Installation_2
 EOM
 }
 
 post_upgrade() {
+  # return if old package version greater 2.06-0...
+  (( $(vercmp $2 '2.06-0') > 0 )) && return
+
   if [[ -e /sys/firmware/efi/efivars ]]; then
     cat <<EOM
 :: GRUB no longer supports side-loading modules when secure boot is
-   enabled. Thus booting will fail unless you have a 'grubx64.efi'
-   executable with bundled modules.
+   enabled. Thus booting will fail, unless you have an EFI executable
+   'grubx64.efi' with bundled modules.
 EOM
   fi
 }

@@ -2,18 +2,17 @@
 
 pkgname="archcraft-hooks-zsh"
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='ZSH hook for Archcraft'
-url="https://github.com/archcraft-os/core-packages"
 arch=('any')
+url="https://github.com/archcraft-os/core-packages"
 license=('GPL3')
 
 source=('archcraft-hook-zsh.hook')
-
-sha512sums=('bee274ab6b0dd162cbc56b49a2d3489cef36440cb51c70d5844c1a02bf07f497433d61ad3313c0f6b38ae128b28fa55a191262658a87c5bd77be99bcc1184c66')
+sha512sums=('ff6dee5835a4362eae08e839359a88e4fc9866b3af7be86531c028b8ed8a52e74c764db49d5b544cda691974be20c44f100f8c22e95921859bea91b919062e52')
 
 package() {
-  local hooks=${pkgdir}/usr/share/libalpm/hooks
+  local hooks="$pkgdir"/usr/share/libalpm/hooks
 
-  install -Dm644 archcraft-hook-zsh.hook "$hooks"/archcraft-hook-zsh.hook
+  install -Dm 644 archcraft-hook-zsh.hook "$hooks"/archcraft-hook-zsh.hook
 }

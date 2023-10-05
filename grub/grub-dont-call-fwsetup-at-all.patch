@@ -1,0 +1,16 @@
+--- a/util/grub.d/30_uefi-firmware.in	2023-03-27 11:36:18.000000000 +0700
++++ b/util/grub.d/30_uefi-firmware.in	2023-03-27 11:37:36.527165096 +0700
+@@ -32,11 +32,8 @@ gettext_printf "Adding boot menu entry f
+ 
+ cat << EOF
+ if [ "\$grub_platform" = "efi" ]; then
+-	fwsetup --is-supported
+-	if [ "\$?" = 0 ]; then
+-		menuentry '$LABEL' \$menuentry_id_option 'uefi-firmware' {
+-			fwsetup
++	menuentry '$LABEL' \$menuentry_id_option 'uefi-firmware' {
++		fwsetup
+ 		}
+-	fi
+ fi
+ EOF

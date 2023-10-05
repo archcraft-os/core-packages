@@ -2,15 +2,12 @@
 
 pkgname=archcraft-installer
 pkgver=3.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Command line installer for Archcraft for expert users."
-url="https://github.com/archcraft-os/core-packages"
 arch=('any')
+url="https://github.com/archcraft-os/core-packages"
 license=('GPL3')
-provides=($pkgname)
-conflicts=($pkgname)
 depends=('alacritty' 'dialog')
-
 source=(
 		abif
 		abif.desktop
@@ -20,27 +17,25 @@ source=(
 		french.trans
 		hungarian.trans
 		italian.trans
-		portuguese_brasil.trans
 		portuguese.trans
+		portuguese_brasil.trans
 		russian.trans
 		spanish.trans)
-
-sha256sums=('93c537a69c8d35e5f9e33998595245616d2e79074bcc998af521112600dbd0c9'
+sha256sums=('99f957e4507c57f63c7ebab37d8a8415fda79926c01a837c4c118665fd708722'
             '6a7e0c36892ffae79aaaebd257c3a6d2913c54ec8376e7d6fdd419b4e5ea958c'
-            '6541422e269383492b9055e5b0e50a75c3057a9551253143572b5f976b2dc056'
+            '4f2a7d22a3310433f12b48cfc8ee28cca613e588eb65bd7555e08bde383baaf2'
             '62fbb7fa46bc724bf1a2de88361e8257503551ab0b472643ce9cdddd1079185f'
             '4881e9576968070ace22d20aa2773d59997a3ab847e66824858dfe3d3dc88596'
             'ba58c00b7b026fa1cee1fdcf592549a6ad88e795d0120cd67861c0dddfd2aff1'
             '28f59663beaa55e166e0849a0b4564322fc5c82f39e59665a0bb40cb9d3a59f9'
             'a3c0c8c8ca304912e65ece7f00cbf9f41fa441db1b24d8862744a95cf594b8a5'
-            '2d5732b753d3e438171b2a4699fea0eb579b7e2a529ebf3380c438b90d2a4935'
             '3f4a0c4ad0901767279c8f43fc6bc42f771edc15fe999059da6e96537b091c8b'
+            '2d5732b753d3e438171b2a4699fea0eb579b7e2a529ebf3380c438b90d2a4935'
             '5b4965a3f012f32445318dd1ba59bc3a7b245557a6692f08d168162f751cfe34'
             '0eef8929f34731c00fd77cc21063379715ba8f456e224b99f5dc463cd147df3f')
 
 package() {
 	local _idir="${pkgdir}/abif-master"
-	
 	mkdir -p "$_idir"
 
 	install -Dm 755 abif 					"$_idir"/abif
@@ -50,11 +45,10 @@ package() {
 	install -Dm 644 french.trans 			"$_idir"/french.trans
 	install -Dm 644 hungarian.trans 		"$_idir"/hungarian.trans
 	install -Dm 644 italian.trans 			"$_idir"/italian.trans
-	install -Dm 644 portuguese_brasil.trans "$_idir"/portuguese_brasil.trans
 	install -Dm 644 portuguese.trans 		"$_idir"/portuguese.trans
+	install -Dm 644 portuguese_brasil.trans "$_idir"/portuguese_brasil.trans
 	install -Dm 644 russian.trans 			"$_idir"/russian.trans
 	install -Dm 644 spanish.trans 			"$_idir"/spanish.trans
 
-	# copy files
-	install -Dm 644 abif.desktop 			-t ${pkgdir}/usr/share/applications/
+	install -Dm 644 abif.desktop 			-t "$pkgdir"/usr/share/applications
 }

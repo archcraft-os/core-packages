@@ -7,6 +7,6 @@ Target = usr/lib/modules/*/vmlinuz
 Target = boot/vmlinuz*
 
 [Action]
-Description = Updating Grub Configuration...
+Description = Updating Grub-Bootmenu
 When = PostTransaction
 Exec = /usr/bin/update-grub

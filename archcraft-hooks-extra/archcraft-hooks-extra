@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Copyright (C) 2020-2022 Aditya Shakya <adi1090x@gmail.com>
+## Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
 ##
 ## Perform various operations for Archcraft
 
@@ -20,7 +20,7 @@ fix_thunar() {
 
 fix_nmd() {
 	## Create nmd script for bspwm session
-	cp -rf /usr/bin/networkmanager_dmenu /usr/local/bin/nmd && sed -i -e 's/config.ini/nmd.ini/g' /usr/local/bin/nmd
+	cp -rf /usr/bin/networkmanager_dmenu /usr/bin/nmd && sed -i -e 's/config.ini/nmd.ini/g' /usr/bin/nmd
 }
 
 fix_grub() {

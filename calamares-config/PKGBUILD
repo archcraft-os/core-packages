@@ -2,17 +2,14 @@
 
 pkgname=calamares-config
 pkgver=3.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Calamares configuration for Archcraft."
-url="https://github.com/archcraft-os/core-packages"
 arch=('any')
+url="https://github.com/archcraft-os/core-packages"
 license=('GPL')
-provides=($pkgname)
-conflicts=($pkgname)
-depends=()
 
 prepare() {
-	cp -af ../files/. ${srcdir}
+	cp -af ../files/. "$srcdir"
 }
 
 package() {

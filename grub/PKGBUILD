@@ -25,14 +25,15 @@ _GRUB_EMU_BUILD="1"
 [[ "${CARCH}" == 'i686' ]] && _EMU_ARCH='i386'
 [[ "${CARCH}" == 'aarch64' ]] && _EMU_ARCH='aarch64'
 
-pkgname=grub
+pkgbase=grub
+pkgname=('grub' 'grub-update')
 pkgdesc="GNU GRand Unified Bootloader (2)"
-_commit='2f4430cc0a44fd8c8aa7aee5c51887667ad3d6c3'
-_unifont_ver='15.0.01'
-_pkgver=2.06.r261.g2f4430cc0
+_unifont_ver='15.1.02'
+_tag='e58b870ff926415e23fc386af41ff81b2f588763' # git rev-parse grub-${_pkgver}
+_pkgver=2.12rc1.r49.ge58b870ff
 pkgver=${_pkgver/-/}
-pkgrel=4
-arch=('x86_64' 'i686' 'aarch64')
+pkgrel=1
+arch=('x86_64' 'aarch64')
 url='https://www.gnu.org/software/grub/'
 license=('GPL3')
 backup=('etc/default/grub'
@@ -44,10 +45,10 @@ provides=('grub-common' 'grub-bios' 'grub-emu' "grub-efi-${_EFI_ARCH}")
 conflicts=('grub-common' 'grub-bios' 'grub-emu' "grub-efi-${_EFI_ARCH}" 'grub-legacy')
 replaces=('grub-common' 'grub-bios' 'grub-emu' "grub-efi-${_EFI_ARCH}")
 makedepends=('git' 'rsync' 'xz' 'freetype2' 'ttf-dejavu' 'python' 'autogen'
-             'texinfo' 'help2man' 'gettext' 'device-mapper' 'fuse2')
+             'texinfo' 'help2man' 'gettext' 'device-mapper' 'fuse3')
 depends=('sh' 'xz' 'gettext' 'device-mapper')
 optdepends=('freetype2: For grub-mkfont usage'
-            'fuse2: For grub-mount usage'
+            'fuse3: For grub-mount usage'
             'dosfstools: For grub-mkrescue FAT FS and EFI support'
             'lzop: For grub-mkrescue LZO support'
             'efibootmgr: For grub-install EFI support'
@@ -65,20 +66,24 @@ validpgpkeys=('E53D497F3FA42AD8C9B4D1E835A93B74E82E4209'  # Vladimir 'phcoder' S
               'BE5C23209ACDDACEB20DB0A28C8189F1988C2166'  # Daniel Kiper <dkiper@net-space.pl>
               '95D2E9AB8740D8046387FD151A09227B1F435A33') # Paul Hardy <unifoundry@unifoundry.com>
 
-source=("git+https://git.savannah.gnu.org/git/grub.git#commit=${_commit}"
+source=("git+https://git.savannah.gnu.org/git/grub.git#tag=${_tag}" #?signed"
         'git+https://git.savannah.gnu.org/git/gnulib.git'
         "https://ftp.gnu.org/gnu/unifont/unifont-${_unifont_ver}/unifont-${_unifont_ver}.bdf.gz"
         '0001-00_header-add-GRUB_COLOR_-variables.patch'
+        '0003-support-dropins-for-default-configuration.patch'
+        'grub.default'
+        'sbat.csv'
         'grub-export-path.patch'
         'grub-archcraft-modifications.patch'
         'grub-archcraft-theme.patch'
         'grub-use-efivarfs.patch'
+        'grub-dont-call-fwsetup-at-all.patch'
+        'fgrep-is-obsolescent-using-grep-F.patch'
         '0001-grub-maybe_quiet.patch'
         '0002-grub-gettext_quiet.patch'
         '0003-grub-quick-boot.patch'
+        'xfs-parsing.patch'
         'background.png'
-        'grub.default'
-        'sbat.csv'
         'grub.cfg'
         'update-grub'
         'grub-set-bootflag'
@@ -86,31 +91,37 @@ source=("git+https://git.savannah.gnu.org/git/grub.git#commit=${_commit}"
 
 sha256sums=('SKIP'
             'SKIP'
-            '1fddba900a36b8a067bf2177b05c4a2482a0f7ca1545cf531c03509f47ce1590'
+            '912834ab9cd372f300541894615f910af4db82477c91b236674057eadfc76429'
             '5dee6628c48eef79812bb9e86ee772068d85e7fcebbd2b2b8d1e19d24eda9dab'
+            'b5d9fcd62ffb3c3950fdeb7089ec2dc2294ac52e9861980ad90a437dedbd3d47'
+            'c02fcd4d1b3b31467bd3a07b3c7b6f761cd1d840d485396a39cfee325cb9b94e'
+            '89bbfe11cec0a07f5b0f170cde35abcc4cbf16d8db7b4920435525f71527fc10'
             '63c611189a60d68c6ae094f2ced91ac576b3921b7fd2e75a551c2dc6baefc35e'
-            '6f22bfb637aaced4a970c6c83f650be34db09ddf5c4fbc640dcfae704bf41584'
-            'adaa13a25fdc0179c0d446cb426bf71b63606225e8620a6a3e30243f6dc0c30b'
+            '2b5a27608b67a4b4648a77908c677321dd4d0d79dc19ee6b870c1a3ffccbcceb'
+            '3494b7ec77b4014f4c2b8d5cd7db1a44b091ff5ca8946e8907af0053a8c74b2f'
             '20b2b6e7f501596b5cce6ffa05906980427f760c03d308d0e045cf2ecf47bb0e'
-            'da3025b8087e8df7d525a52a5bf648c432a573cafc2a24638e63594cee366ffe'
+            '8e1a99b6469ddae522891a084d680a2b37f34504f1010213474acedb16e40921'
+            '07cfbfecd00972ea56a15c5d3312f60107609181d5b1c87a60690c22846d73f9'
+            'a522514edb264374c8cce08998c5586ffc832091c5db1be7bf8b21078223e2a6'
             '39d7843dfe1e10ead912a81be370813b8621794a7967b3cc5e4d4188b5bf7264'
             '4cae03685c238a60169f1134165ff010faebddb5b3218d92d32e0b6729b27656'
+            'ca35edec447ac0277c78f862f88eebb8cef45b33ffe6021f2c142dd7ab3749be'
             'cbbf203eb037f95db22c005692426a465de2d5d611954733df037f7826ebbb37'
-            'adad37403cb833b9c96ee15ad4afe5322389e66c851b657102ba6fbf7f3bac55'
-            '89bbfe11cec0a07f5b0f170cde35abcc4cbf16d8db7b4920435525f71527fc10'
             '7fc95d49c0febe98a76e56b606a280565cb736580adecf163bc6b5aca8e7cbd8'
-            'a6a3e6a7c2380aff66b6096d478aed790c927ceed551ce52c0c454191eb4e3aa'
+            'c9027a993fe19a023bc6560aaee21487d97388d7997ba02db5c947bd0a5bdc12'
             '2eb199f510340cf8d190ba2fa80d5bdcf1e2e7ca53e8011af2ee62ea3b8dd03b'
-            'b9fbe1395d1e4961f3d39feb3804049c5f7a6007ca389695a71f6f22279bf921')
+            'a97ddf6694fa5070463a2d3f997205436a63fbe125071dd1bef0d59999adff70')
             
 _backports=(
+)
+
+_reverts=(
 )
 
 _configure_options=(
 	PACKAGE_VERSION="${pkgver}-${pkgrel}"
 	FREETYPE="pkg-config freetype2"
 	BUILD_FREETYPE="pkg-config freetype2"
-	--enable-mm-debug
 	--enable-nls
 	--enable-device-mapper
 	--enable-cache-stats
@@ -143,28 +154,49 @@ prepare() {
 		git cherry-pick -n "${_c}"
 	done
 
-	echo "==> Patch to enable GRUB_COLOR_* variables in grub-mkconfig..."
+	echo "Apply reverts..."
+	local _c
+	for _c in "${_reverts[@]}"; do
+		git log --oneline -1 "${_c}"
+		git revert -n "${_c}"
+	done
+
+	echo "Enable GRUB_COLOR_* variables in grub-mkconfig..."
 	## Based on http://lists.gnu.org/archive/html/grub-devel/2012-02/msg00021.html
 	patch -Np1 -i "${srcdir}/0001-00_header-add-GRUB_COLOR_-variables.patch"
+
+	echo "Support dropins for default configuration..."
+	patch -Np1 -i "${srcdir}/0003-support-dropins-for-default-configuration.patch"
 
 	# https://github.com/calamares/calamares/issues/918
 	echo "Use efivarfs modules"
 	patch -Np1 -i "${srcdir}/grub-use-efivarfs.patch"
 
-	echo "==> Patch to export $PATH"
+	echo 'Export $PATH'
 	patch -Np1 -i "${srcdir}/grub-export-path.patch"
 	
-	echo "==> Patch to include Archcraft Modifications"
+	# https://bugs.archlinux.org/task/75701
+	# https://lists.gnu.org/archive/html/grub-devel/2022-08/msg00374.html
+	echo "Don't call fwsetup at all"
+	patch -Np1 -i "${srcdir}/grub-dont-call-fwsetup-at-all.patch"
+
+	echo "Include Archcraft Modifications"
 	patch -Np1 -i "${srcdir}/grub-archcraft-modifications.patch"
 	patch -Np1 -i "${srcdir}/grub-archcraft-theme.patch"
 
-	echo "==> Add Ubuntu patches"
+	echo "fgrep is obsolescent using grep -F"
+	patch -Np1 -i "${srcdir}/fgrep-is-obsolescent-using-grep-F.patch"
+
+	echo "Add Ubuntu patches"
 	echo "0001"
 	patch -Np1 -i "${srcdir}/0001-grub-maybe_quiet.patch"
 	echo "002"
 	patch -Np1 -i "${srcdir}/0002-grub-gettext_quiet.patch"
 	echo "0003"
 	patch -Np1 -i "${srcdir}/0003-grub-quick-boot.patch"
+	
+	echo "Fix XFS directory entry parsing"
+	patch -Np1 -i "${srcdir}/xfs-parsing.patch"
 
 	echo "Fix DejaVuSans.ttf location so that grub-mkfont can create *.pf2 files for starfield theme..."
 	sed 's|/usr/share/fonts/dejavu|/usr/share/fonts/dejavu /usr/share/fonts/TTF|g' -i "configure.ac"
@@ -313,9 +345,6 @@ _package_grub-common_and_bios() {
 	echo "Install grub.cfg for backup array"
 	install -D -m0644 "${srcdir}/grub.cfg" "${pkgdir}/boot/grub/grub.cfg"
 
-	echo "Install update-grub"
-	install -Dm755 "${srcdir}/update-grub" "${pkgdir}/usr/bin/update-grub"
-
 	echo "Install grub background"
 	install -Dm644 "${srcdir}/background.png" "${pkgdir}/usr/share/grub/background.png"	
 
@@ -355,7 +384,8 @@ _package_grub-emu() {
 	rm -f "${pkgdir}/usr/lib/grub/${_EMU_ARCH}-emu"/{kernel.exec,gdb_grub,gmodule.pl} || true
 }
 
-package() {
+package_grub() {
+	depends+=('grub-update')
 	cd "${srcdir}/grub/"
 
 	echo "Package grub ${_EFI_ARCH} efi stuff..."
@@ -378,3 +408,14 @@ package() {
 	rm "$pkgdir/usr/share/info/dir"
 }
 
+package_grub-update() {
+	pkgdesc="GNU Grub (2) Update Menu Script"
+	depends=(grub)
+	optdepends=()
+	provides=()
+	conflicts=()
+	replaces=()
+	backup=()
+	echo "Install update-grub"
+	install -Dm755 "${srcdir}/update-grub" "${pkgdir}/usr/bin/update-grub"
+}

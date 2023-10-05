@@ -1,0 +1,25 @@
+diff --git a/grub-core/lib/libgcrypt/src/libgcrypt-config.in b/grub-core/lib/libgcrypt/src/libgcrypt-config.in
+index c052638cd..84f3b26df 100644
+--- a/grub-core/lib/libgcrypt/src/libgcrypt-config.in
++++ b/grub-core/lib/libgcrypt/src/libgcrypt-config.in
+@@ -142,7 +142,7 @@ if test "$echo_cflags" = "yes"; then
+ 
+     tmp=""
+     for i in $includes $cflags_final; do
+-       if echo "$tmp" | fgrep -v -- "$i" >/dev/null; then
++       if echo "$tmp" | grep -F -v -- "$i" >/dev/null; then
+            tmp="$tmp $i"
+        fi
+     done
+@@ -163,7 +163,7 @@ if test "$echo_libs" = "yes"; then
+ 
+     tmp=""
+     for i in $libdirs $libs_final; do
+-       if echo "$tmp" | fgrep -v -- "$i" >/dev/null; then
++       if echo "$tmp" | grep -F -v -- "$i" >/dev/null; then
+            tmp="$tmp $i"
+        fi
+     done
+-- 
+2.37.3
+

@@ -4,9 +4,9 @@
 Operation = Install
 Operation = Upgrade
 Type = Package
-Target = i3-wm
+Target = qtile
 
 [Action]
-Description = Deleting i3-with-shmlog.desktop file...
+Description = Deleting Qtile (Wayland) Desktop file...
 When = PostTransaction
-Exec = /usr/bin/rm -r -f /usr/share/xsessions/i3-with-shmlog.desktop
+Exec = /usr/bin/rm -r -f /usr/share/wayland-sessions/qtile-wayland.desktop

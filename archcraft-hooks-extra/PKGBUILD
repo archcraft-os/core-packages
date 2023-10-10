@@ -2,7 +2,7 @@
 
 pkgname="archcraft-hooks-extra"
 pkgver=2.0
-pkgrel=4
+pkgrel=5
 pkgdesc='Extra pacman hooks for Archcraft'
 arch=('any')
 url="https://github.com/archcraft-os/core-packages"
@@ -12,13 +12,15 @@ source=(
 		'archcraft-hook-i3wm.hook'
 		'archcraft-hook-nm.hook'
 		'archcraft-hook-openbox.hook'
+		'archcraft-hook-qtile.hook'
 		'archcraft-hook-thunar.hook'
 		'archcraft-hooks-extra'
 )
 sha512sums=('75cdedc8781e3393454c85db57b9298e0f0254f785322199c1b481dab1e36f5d494ba2fcee6a03c2ee8993dc9b91c1d7c55427667824b6d99378cd1d7f905d76'
-            '722de06ff6f9d67141411e169fd07c7316c28f1f3dd4660af31252ff6a4313c63efbd871b4cf19f3e8621c869caeb9876eecf716f4b02bb1ff8caea920b30ffc'
+            '9ccd070c663cbcea518aaa685016bf9260695c56f5cb14136b28c459be7bbf31bec1a19cad8e310c25e8baeec8310d715dc1604ff2f5738465d8c2beae18952c'
             '4e27913c5082cd97c8aaf38754a6da0f3e61c9b416b0f3cae6c41744f65aca32e96e9ab1b912d379113b5d9a241d47d9c359e004de693e0523264e8bd14853d8'
             '670bbb7b47f960e15cbea042d224f810cc9e81db82b8f971bdb3aec304b741aa22d71e5dde919c020705c322b325c4f517577ddafd798bb0f8a434321fe9c515'
+            'fab7a2ee3955bf65406e7e7ecf3baa5c16f0b63d6c9a2902d9fc8f7d11172ef293dc0d3892392bfc46c46b9820b3c329b1561beaf0aa76de4e0a6faee30f7aa5'
             'b107615c222a371da57e6ba789f7ea25ec128e1c5f62f5a670a95b4e3ff87311c70affabb52774c4063d8269c531e07e073b68dca7c6dd7daf188f43c37af4f6'
             '1982f5b82c0a5f66dc5e5067382baad60ac972d3a4d6a9e9392b5bd752106bf018a711bdf5258ed5e9c44b166c792fc31f7ed0157aa7a5b08da1eef687e71c32')
 
@@ -30,6 +32,7 @@ package() {
   install -Dm 644 archcraft-hook-i3wm.hook  	"$hooks"/archcraft-hook-i3wm.hook
   install -Dm 644 archcraft-hook-nm.hook  		"$hooks"/archcraft-hook-nm.hook
   install -Dm 644 archcraft-hook-openbox.hook  	"$hooks"/archcraft-hook-openbox.hook
+  install -Dm 644 archcraft-hook-qtile.hook  	"$hooks"/archcraft-hook-qtile.hook
   install -Dm 644 archcraft-hook-thunar.hook  	"$hooks"/archcraft-hook-thunar.hook
 			  
   install -Dm 755 archcraft-hooks-extra       	"$bin"/archcraft-hooks-extra

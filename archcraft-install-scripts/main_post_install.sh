@@ -53,7 +53,7 @@ remove_openbox() {
 					 )
 
 	## List Of File & Dirs To Remove
-	_files_to_remove=("$HOME_DIR"/.config/{openbox,openbox-themes})
+	_files_to_remove=("$HOME_DIR"/.config/openbox)
 
 	## Remove Packages, File & Dirs
 	_remove_for_wm

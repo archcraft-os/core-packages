@@ -241,8 +241,7 @@ _remove_unwanted_packages() {
 _clean_target_system() {
     local _files_to_remove=(
         /etc/sudoers.d/02_g_wheel
-        /etc/systemd/system/{etc-pacman.d-gnupg.mount,getty@tty1.service.d}
-        /etc/systemd/system/getty@tty1.service.d/autologin.conf
+        /etc/systemd/system/getty@tty1.service.d
         /etc/initcpio
         /etc/mkinitcpio-archiso.conf
         /etc/polkit-1/rules.d/49-nopasswd-calamares.rules

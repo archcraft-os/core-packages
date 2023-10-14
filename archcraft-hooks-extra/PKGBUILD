@@ -2,7 +2,7 @@
 
 pkgname="archcraft-hooks-extra"
 pkgver=2.0
-pkgrel=5
+pkgrel=6
 pkgdesc='Extra pacman hooks for Archcraft'
 arch=('any')
 url="https://github.com/archcraft-os/core-packages"
@@ -14,6 +14,7 @@ source=(
 		'archcraft-hook-openbox.hook'
 		'archcraft-hook-qtile.hook'
 		'archcraft-hook-thunar.hook'
+		'archcraft-hook-xfce-notifyd.hook'
 		'archcraft-hooks-extra'
 )
 sha512sums=('75cdedc8781e3393454c85db57b9298e0f0254f785322199c1b481dab1e36f5d494ba2fcee6a03c2ee8993dc9b91c1d7c55427667824b6d99378cd1d7f905d76'
@@ -22,18 +23,20 @@ sha512sums=('75cdedc8781e3393454c85db57b9298e0f0254f785322199c1b481dab1e36f5d494
             '670bbb7b47f960e15cbea042d224f810cc9e81db82b8f971bdb3aec304b741aa22d71e5dde919c020705c322b325c4f517577ddafd798bb0f8a434321fe9c515'
             'fab7a2ee3955bf65406e7e7ecf3baa5c16f0b63d6c9a2902d9fc8f7d11172ef293dc0d3892392bfc46c46b9820b3c329b1561beaf0aa76de4e0a6faee30f7aa5'
             'b107615c222a371da57e6ba789f7ea25ec128e1c5f62f5a670a95b4e3ff87311c70affabb52774c4063d8269c531e07e073b68dca7c6dd7daf188f43c37af4f6'
-            '1982f5b82c0a5f66dc5e5067382baad60ac972d3a4d6a9e9392b5bd752106bf018a711bdf5258ed5e9c44b166c792fc31f7ed0157aa7a5b08da1eef687e71c32')
+            '4a3311e3187e138d1c13439ff6c0e3887367da6654687c340cbd989836a50b54e41265f22cf74b07ca9ba4b28eb7f3860b28560bf5e7ccbc4ea9cba91852b2a9'
+            '8645c3cedcff1310cef429e91e315f286398297cb59a89610fd41c80d1bf6ecd71115a058cde2bf6957a4aab65468799a4cc48d1b5c9d3499124e445b8c72c01')
 
 package() {
   local hooks="$pkgdir"/usr/share/libalpm/hooks
   local bin="$pkgdir"/usr/bin
 
-  install -Dm 644 archcraft-hook-grub.hook  	"$hooks"/archcraft-hook-grub.hook
-  install -Dm 644 archcraft-hook-i3wm.hook  	"$hooks"/archcraft-hook-i3wm.hook
-  install -Dm 644 archcraft-hook-nm.hook  		"$hooks"/archcraft-hook-nm.hook
-  install -Dm 644 archcraft-hook-openbox.hook  	"$hooks"/archcraft-hook-openbox.hook
-  install -Dm 644 archcraft-hook-qtile.hook  	"$hooks"/archcraft-hook-qtile.hook
-  install -Dm 644 archcraft-hook-thunar.hook  	"$hooks"/archcraft-hook-thunar.hook
+  install -Dm 644 archcraft-hook-grub.hook  		"$hooks"/archcraft-hook-grub.hook
+  install -Dm 644 archcraft-hook-i3wm.hook  		"$hooks"/archcraft-hook-i3wm.hook
+  install -Dm 644 archcraft-hook-nm.hook  			"$hooks"/archcraft-hook-nm.hook
+  install -Dm 644 archcraft-hook-openbox.hook  		"$hooks"/archcraft-hook-openbox.hook
+  install -Dm 644 archcraft-hook-qtile.hook  		"$hooks"/archcraft-hook-qtile.hook
+  install -Dm 644 archcraft-hook-thunar.hook  		"$hooks"/archcraft-hook-thunar.hook
+  install -Dm 644 archcraft-hook-xfce-notifyd.hook  "$hooks"/archcraft-hook-xfce-notifyd.hook
 			  
-  install -Dm 755 archcraft-hooks-extra       	"$bin"/archcraft-hooks-extra
+  install -Dm 755 archcraft-hooks-extra       		"$bin"/archcraft-hooks-extra
 }

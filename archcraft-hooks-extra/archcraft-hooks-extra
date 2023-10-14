@@ -39,16 +39,24 @@ fix_i3wm() {
 	fi
 }
 
+fix_xfce_notify() {
+	dbus_file='/usr/share/dbus-1/services/org.xfce.xfce4-notifyd.Notifications.service'
+	if [[ -e "$dbus_file" ]]; then
+		sed -i -e 's/Name=org.freedesktop.Notifications/Name=org.freedesktop.NotificationsNone/g' "$dbus_file"
+	fi
+}
+
 main() {
     local hookname="$1"
 
     case "$hookname" in
-        fix-openbox)  fix_openbox ;;
-        fix-thunar)   fix_thunar ;;
-        fix-i3wm)     fix_i3wm ;;
-        fix-nmd)      fix_nmd ;;
-        fix-grub)     fix_grub ;;
-        "")           echo "Nothing to do!";;
+        fix-openbox)  		fix_openbox ;;
+        fix-thunar)   		fix_thunar ;;
+        fix-i3wm)     		fix_i3wm ;;
+        fix-nmd)      		fix_nmd ;;
+        fix-grub)     		fix_grub ;;
+        fix-xfce-notify)    fix_xfce_notify ;;
+        "")           		echo "Nothing to do!";;
     esac
 }
 

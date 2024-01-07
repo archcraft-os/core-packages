@@ -100,18 +100,18 @@ foreground = "#ABB2BF"
 
 [colors.normal]
 black   = "#32363D"
-red     = "#E06B74"
-green   = "#98C379"
+red     = "#DA4453"
+green   = "#51872A"
 yellow  = "#E5C07A"
-blue    = "#62AEEF"
+blue    = "#1E2128"
 magenta = "#C778DD"
 cyan    = "#55B6C2"
 white   = "#ABB2BF"
 
 [colors.bright]
 black   = "#50545B"
-red     = "#EA757E"
-green   = "#A2CD83"
+red     = "#DA4453"
+green   = "#4E8C21"
 yellow  = "#EFCA84"
 blue    = "#6CB8F9"
 magenta = "#D282E7"

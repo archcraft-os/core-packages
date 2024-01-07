@@ -1,0 +1,156 @@
+## Copyright (C) 2020-2024 Aditya Shakya <adi1090x@gmail.com>
+##
+## Configuration for Alacritty, the GPU enhanced terminal emulator.
+## It's a very basic and simple config file, for full configuration, Run `man 5 alacritty`
+
+## GENERAL --------------------------------------------------------
+
+## Live config reload
+live_config_reload = true
+
+## Offer IPC using alacritty msg
+ipc_socket = true
+
+## ENVIRONMENT ----------------------------------------------------
+
+## All key-value pairs in the [env] section will be added as environment variables for any process spawned
+## by Alacritty, including its shell. Some entries may override variables set by alacritty itself.
+[env]
+TERM = "alacritty"
+WINIT_X11_SCALE_FACTOR = "1.0"
+
+## WINDOW ---------------------------------------------------------
+[window]
+position = "None"
+dynamic_padding = true
+decorations = "full"
+opacity = 1.0
+blur = false
+startup_mode = "Windowed"
+dynamic_title = true
+class = { instance = "Alacritty", general = "Alacritty" }
+decorations_theme_variant = "None"
+
+## Number of lines/columns (not pixels) in the terminal.
+[window.dimensions]
+columns = 105
+lines = 30
+
+## Blank space added around the window in pixels.
+[window.padding]
+x = 0
+y = 10
+
+## SCROLLING ------------------------------------------------------
+[scrolling]
+history = 10000
+multiplier = 3
+
+## BELL -----------------------------------------------------------
+[bell]
+animation = "Linear"
+duration = 20
+command = { program = "paplay", args = ["/usr/share/sounds/freedesktop/stereo/dialog-error.oga"] }
+
+## SELECTION ------------------------------------------------------
+[selection]
+save_to_clipboard = true
+
+## CURSOR ---------------------------------------------------------
+[cursor]
+vi_mode_style = "None"
+blink_interval = 750
+blink_timeout = 5
+unfocused_hollow = false
+thickness = 0.15
+
+[cursor.style]
+shape = "Block"
+blinking = "On"
+
+## MOUSE ----------------------------------------------------------
+[mouse]
+hide_when_typing = false
+
+## HINTS ----------------------------------------------------------
+[[hints.enabled]]
+command         = "xdg-open"
+hyperlinks      = true
+post_processing = true
+persist         = false
+mouse.enabled   = true
+binding         = { key = "U", mods = "Control|Shift" }
+regex           = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩‘]+"
+
+## DEBUG ----------------------------------------------------------
+[debug]
+render_timer = false
+persistent_logging = false
+log_level = "Warn"
+renderer = "None"
+print_events = false
+highlight_damage = false
+prefer_egl = false
+
+## Colors configuration -------------------------------------
+
+[colors.primary]
+background = "#1E2128"
+foreground = "#ABB2BF"
+
+[colors.normal]
+black   = "#32363D"
+red     = "#E06B74"
+green   = "#98C379"
+yellow  = "#E5C07A"
+blue    = "#62AEEF"
+magenta = "#C778DD"
+cyan    = "#55B6C2"
+white   = "#ABB2BF"
+
+[colors.bright]
+black   = "#50545B"
+red     = "#EA757E"
+green   = "#A2CD83"
+yellow  = "#EFCA84"
+blue    = "#6CB8F9"
+magenta = "#D282E7"
+cyan    = "#5FC0CC"
+white   = "#B5BCC9"
+
+## Font configuration ---------------------------------------
+
+[font]
+## Font size in points.
+size = 12
+
+## When true, Alacritty will use a custom built-in font for box drawing characters and powerline symbols.
+builtin_box_drawing = true
+
+## Normal font family.
+[font.normal]
+family = "JetBrains Mono Medium"
+
+## If the family is not specified, it will fall back to the value specified for the normal font.
+[font.bold]
+family = "JetBrains Mono Medium"
+
+## If the family is not specified, it will fall back to the value specified for the normal font.
+[font.italic]
+family = "JetBrains Mono Medium"
+
+## If the family is not specified, it will fall back to the value specified for the normal font.
+[font.bold_italic]
+family = "JetBrains Mono Medium"
+
+## Offset is the extra space around each character.
+## 'y' can be thought of as modifying the line spacing, and 'x' as modifying the letter spacing.
+[font.offset]
+x = 0
+y = 0
+
+## Glyph offset determines the locations of the glyphs within their cells with the default being at the bottom.
+## Increasing 'x' moves the glyph to the right, increasing 'y' moves the glyph upward.
+[font.glyph_offset]
+x = 0
+y = 0

@@ -2,7 +2,7 @@
 
 pkgname=archcraft-installer
 pkgver=3.0
-pkgrel=3
+pkgrel=5
 pkgdesc="Command line installer for Archcraft for expert users."
 arch=('any')
 url="https://github.com/archcraft-os/core-packages"
@@ -11,7 +11,7 @@ depends=('alacritty' 'dialog' 'wipe')
 source=(
 		abif
 		abif.desktop
-		alacritty.yml
+		alacritty.toml
 		dutch.trans
 		english.trans
 		french.trans
@@ -21,9 +21,9 @@ source=(
 		portuguese_brasil.trans
 		russian.trans
 		spanish.trans)
-sha256sums=('99f957e4507c57f63c7ebab37d8a8415fda79926c01a837c4c118665fd708722'
-            'e8818e585c92432df82de396b0aeed903f0b71b4b1e93ee93ea5f84c9b4d0b5f'
-            '4f2a7d22a3310433f12b48cfc8ee28cca613e588eb65bd7555e08bde383baaf2'
+sha256sums=('3d9b86e98366e315e44de2ced2926439bbbd2ff45bfc40c9f1dd824a4635b51b'
+            '578ffe61bddb7a90e3dd2e78a10c8bf42ac99961b81afade1596cbde5b57766e'
+            '24b54acb524404373deb6b9924cb45258289d5dd724a1969405281471a5128ec'
             '62fbb7fa46bc724bf1a2de88361e8257503551ab0b472643ce9cdddd1079185f'
             '4881e9576968070ace22d20aa2773d59997a3ab847e66824858dfe3d3dc88596'
             'ba58c00b7b026fa1cee1fdcf592549a6ad88e795d0120cd67861c0dddfd2aff1'
@@ -39,7 +39,7 @@ package() {
 	mkdir -p "$_idir"
 
 	install -Dm 755 abif 					"$_idir"/abif
-	install -Dm 644 alacritty.yml 			"$_idir"/alacritty.yml
+	install -Dm 644 alacritty.toml 			"$_idir"/alacritty.toml
 	install -Dm 644 dutch.trans 			"$_idir"/dutch.trans
 	install -Dm 644 english.trans 			"$_idir"/english.trans
 	install -Dm 644 french.trans 			"$_idir"/french.trans

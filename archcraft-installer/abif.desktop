@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Install Archcraft (CLI)
 Comment=Command Line Installer For Archcraft
-Exec=alacritty --class 'alacritty-float,alacritty-float' --config-file /abif-master/alacritty.yml --title 'Archcraft Installer (CLI)' -e sudo /abif-master/abif
+Exec=alacritty --class 'alacritty-float,alacritty-float' --config-file /abif-master/alacritty.toml --title 'Archcraft Installer (CLI)' -e sudo /abif-master/abif
 Icon=archcraft-red
 Type=Application
 Categories=System;

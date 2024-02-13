@@ -2,7 +2,7 @@
 
 ## Copyright (C) 2023 Aditya Shakya <adi1090x@gmail.com>
 ##
-## Post-Installation Script For Archcraft Prime, Executed by Calamare's `contextualprocess` module.
+## Post-Installation Script For Archcraft, Executed by Calamare's `contextualprocess` module.
 
 ## ---------------------------------------------------------------------------------------
 

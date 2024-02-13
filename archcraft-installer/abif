@@ -500,15 +500,15 @@ run_mkinitcpio() {
     ([[ $LVM -eq 0 ]] && [[ $LUKS -eq 1 ]]) && sed -i 's/block filesystems/block plymouth-encrypt filesystems/g' ${MOUNTPOINT}/etc/mkinitcpio.conf 2>/tmp/.errlog && sed -i 's/#GRUB_ENABLE_CRYPTODISK=.*/GRUB_ENABLE_CRYPTODISK=y/g' ${MOUNTPOINT}/etc/default/grub 2>/tmp/.errlog
     check_for_error
 	
-	# Remove archiso hooks from install
-    sed -i 's/archiso archiso_loop_mnt/autodetect/g' ${MOUNTPOINT}/etc/mkinitcpio.conf 2>/tmp/.errlog
+	# Remove archiso hooks from install (not needed after archiso 75)
+    #sed -i 's/archiso archiso_loop_mnt/autodetect/g' ${MOUNTPOINT}/etc/mkinitcpio.conf 2>/tmp/.errlog
 
-	# Add fsck hook
-    sed -i 's/keyboard/keyboard fsck/g' ${MOUNTPOINT}/etc/mkinitcpio.conf 2>/tmp/.errlog
+	# Add fsck hook (not needed after archiso 75)
+    #sed -i 's/keyboard/keyboard fsck/g' ${MOUNTPOINT}/etc/mkinitcpio.conf 2>/tmp/.errlog
     
 	arch_chroot "mkinitcpio -p linux" 2>>/tmp/.errlog
 	check_for_error
- 
+
 }
 
 ######################################################################
@@ -1518,7 +1518,7 @@ install_root(){
     
   # Stop pacman complaining
   #arch_chroot "mkdir -p /var/lib/pacman/sync" 2>>/tmp/.errlog
-  #arch_chroot "touch /var/lib/pacman/sync/{core.db,extra.db,community.db,multilib.db,archcraft.db}" 2>>/tmp/.errlog
+  #arch_chroot "touch /var/lib/pacman/sync/{core.db,extra.db,archcraft.db}" 2>>/tmp/.errlog
 
   # Keyboard config for vc and x11
   [[ -e /tmp/vconsole.conf ]] && cp /tmp/vconsole.conf ${MOUNTPOINT}/etc/vconsole.conf 2>>/tmp/.errlog

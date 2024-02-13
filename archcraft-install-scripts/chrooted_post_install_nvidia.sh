@@ -56,7 +56,6 @@ _enable_nvidia() {
 			echo "+---------------------->>"
 			echo "[*] Adding Nvidia Kernel Parameter in '/etc/default/grub' file..."
 			sed -i -e 's|GRUB_CMDLINE_LINUX_DEFAULT="quiet splash|GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nvidia_drm.modeset=1|g' /etc/default/grub
-			
 		fi
 	fi
 }
@@ -64,15 +63,17 @@ _enable_nvidia() {
 ## Remove Nvidia Specific Files from Live ISO
 _remove_iso_files() {
     local _files_to_remove=(
-        /etc/mkinitcpio-nvidia.conf
+        /etc/mkinitcpio.conf.d
         /etc/mkinitcpio.d/linux-nvidia.preset
     )
     local dfile
 
 	echo "+---------------------->>"
     for dfile in "${_files_to_remove[@]}"; do 
-		echo "[*] Deleting $dfile file from target system..."
-		rm -rf ${dfile}
+		if [[ -e "$dfile" ]] ; then
+			echo "[*] Deleting $dfile file from target system..."
+			rm -rf ${dfile}
+		fi
 	done
 }
 

@@ -20,7 +20,7 @@ BBlue='\033[1;34m'  BPurple='\033[1;35m' BCyan='\033[1;36m'  BWhite='\033[1;37m'
 _notify_reboot_required() {
     local xx
 
-    for xx in "$DESKTOP_SESSION"; do
+    for xx in "$XDG_CURRENT_DESKTOP"; do
         if [[ -n "$xx" ]] ; then
             break
         fi

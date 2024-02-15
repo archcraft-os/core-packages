@@ -15,7 +15,7 @@ enable_autologin() {
 	_session_name="$1"
 
 	if [[ `cat $DM_FILE | grep 'Autologin'` ]]; then
-		sed -i -e "/\[Autologin\]/{ n; s/Session=.*/Session=$_session_name/g }" "$DM_FILE"
+		sed -i -e "/\[Autologin\]/{ n; n; s/Session=.*/Session=$_session_name/g }" "$DM_FILE"
 	fi
 }
 

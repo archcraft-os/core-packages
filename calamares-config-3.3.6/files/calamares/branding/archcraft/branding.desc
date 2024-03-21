@@ -61,10 +61,10 @@ images:
 
 ## Colors for text and background components in sidebar only.
 style:
-   sidebarBackground:    "#353945"
-   sidebarText:          "#EFF0F1"
-   sidebarTextSelect:    "#FFFFFF"
-   sidebarTextHighlight: "#5294E2"
+   SidebarBackground:        "#353945"
+   SidebarText:              "#EFF0F1"
+   SidebarTextCurrent:       "#FFFFFF"
+   SidebarBackgroundCurrent: "#5294E2"
 
 ## Slideshow
 slideshow:               "show.qml"

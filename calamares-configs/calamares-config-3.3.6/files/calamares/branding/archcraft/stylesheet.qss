@@ -131,6 +131,11 @@ QComboBox::down-arrow {
 #sidebarApp {
 }
 
+#sidebarMenuApp {
+	padding: 5px;
+	background-color: #353945;
+}
+
 #logoApp {
 	padding: 0px;
 }

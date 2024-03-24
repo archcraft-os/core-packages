@@ -74,6 +74,10 @@ prepare() {
 	sed -i -e 's#Icon=.*#Icon=archcraft-green#g' "$srcdir/${_pkgname}-${pkgver}-${pkgrel}/calamares.desktop"
 	sed -i -e 's#Comment=.*#Comment=Archcraft System Installer#g' "$srcdir/${_pkgname}-${pkgver}-${pkgrel}/calamares.desktop"
 
+	# temporary fix for sddm autologin issue in 3.3.6
+	sed -i -e 's|configuration_file = .*|configuration_file = "/etc/sddm.conf"|g' "$srcdir/${_pkgname}-${pkgver}-${pkgrel}/src/modules/displaymanager/main.py"
+	sed -i -e "s|self.configuration_file|self.configuration_file.lstrip('/')|g"   "$srcdir/${_pkgname}-${pkgver}-${pkgrel}/src/modules/displaymanager/main.py"
+
 	cd ${_pkgname}-${pkgver}-${pkgrel}
 	sed -i -e "s|CALAMARES_VERSION 3.3.5|CALAMARES_VERSION $pkgver-$pkgrel|g" CMakeLists.txt
 }

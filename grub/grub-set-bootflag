@@ -1,5 +1,0 @@
-#!/bin/sh
-echo ">> Info: 'grub-set-bootflag' has currently no function."
-echo "         To hide the menu set the following in '/etc/default/grub':"
-echo "         GRUB_TIMEOUT=10"
-echo "         GRUB_TIMEOUT_STYLE=hidden"

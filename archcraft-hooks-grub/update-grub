@@ -1,0 +1,4 @@
+#!/bin/bash
+
+set -e
+/usr/bin/grub-mkconfig -o /boot/grub/grub.cfg "$@"

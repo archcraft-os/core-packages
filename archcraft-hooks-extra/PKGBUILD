@@ -2,13 +2,12 @@
 
 pkgname="archcraft-hooks-extra"
 pkgver=2.0
-pkgrel=6
+pkgrel=7
 pkgdesc='Extra pacman hooks for Archcraft'
 arch=('any')
 url="https://github.com/archcraft-os/core-packages"
 license=('GPL3')
 source=(
-		'archcraft-hook-grub.hook'
 		'archcraft-hook-i3wm.hook'
 		'archcraft-hook-nm.hook'
 		'archcraft-hook-openbox.hook'
@@ -17,20 +16,18 @@ source=(
 		'archcraft-hook-xfce-notifyd.hook'
 		'archcraft-hooks-extra'
 )
-sha512sums=('75cdedc8781e3393454c85db57b9298e0f0254f785322199c1b481dab1e36f5d494ba2fcee6a03c2ee8993dc9b91c1d7c55427667824b6d99378cd1d7f905d76'
-            '9ccd070c663cbcea518aaa685016bf9260695c56f5cb14136b28c459be7bbf31bec1a19cad8e310c25e8baeec8310d715dc1604ff2f5738465d8c2beae18952c'
-            '4e27913c5082cd97c8aaf38754a6da0f3e61c9b416b0f3cae6c41744f65aca32e96e9ab1b912d379113b5d9a241d47d9c359e004de693e0523264e8bd14853d8'
-            '670bbb7b47f960e15cbea042d224f810cc9e81db82b8f971bdb3aec304b741aa22d71e5dde919c020705c322b325c4f517577ddafd798bb0f8a434321fe9c515'
-            'fab7a2ee3955bf65406e7e7ecf3baa5c16f0b63d6c9a2902d9fc8f7d11172ef293dc0d3892392bfc46c46b9820b3c329b1561beaf0aa76de4e0a6faee30f7aa5'
-            'b107615c222a371da57e6ba789f7ea25ec128e1c5f62f5a670a95b4e3ff87311c70affabb52774c4063d8269c531e07e073b68dca7c6dd7daf188f43c37af4f6'
-            '4a3311e3187e138d1c13439ff6c0e3887367da6654687c340cbd989836a50b54e41265f22cf74b07ca9ba4b28eb7f3860b28560bf5e7ccbc4ea9cba91852b2a9'
-            '8645c3cedcff1310cef429e91e315f286398297cb59a89610fd41c80d1bf6ecd71115a058cde2bf6957a4aab65468799a4cc48d1b5c9d3499124e445b8c72c01')
+sha512sums=('55d0a2744a719d2d425eadef1622c1ac68717a73d4f6022315fa43d168330589c9648aff67fc8262e123a25363ba70d1117d50bf787bda86b120d8f83d95d515'
+            '3802f5d1316198e0bea79f57413970219844a86f1374e75cb2b587b92b67b49c8ef4cee6363464970e4fadaf654a5e030d6cc46f6f3c82f52920632dafa74a7b'
+            '2b172378ed982727585c463c781cec49adf84d88ee99650ba4bd21c8d70719fc711b15f26961682b56640ce2fd31e84e37c65ad20e90b8492acbca3e4a837e27'
+            '57b125b49f2319696fd2548c88fae91467be7cbeb23b1e44999ab38ce21c22a4f322fc871bfc0fd05dd87ae96a7ad55ae29c24c3d70df041d2ea5200e3012628'
+            '436ac76704bd2cabb9bcb330c6038ed0f1796dc38953e54198928214cd99d57fdbc09e52488aa5656a6dc4c418b16dccb175357c7f4d9d173301bfc69fd5722a'
+            'b6efc9c08b1c5a7730ae274fa3cb1d66b3ac03996bcb5ca6c6ffcdc5b38c77dbe1eecebc584835bc88c02b1b08974f1a4e6fad784f3731d58a932ba20b283a9e'
+            '5dbab17a54cf4adedde4b33e04cf49e65256c37c506962ab8f71759821e4b30531777c7761db174a73f602ead1ee95c5d2463efeaa39b1f648ad40966aba80a8')
 
 package() {
   local hooks="$pkgdir"/usr/share/libalpm/hooks
   local bin="$pkgdir"/usr/bin
 
-  install -Dm 644 archcraft-hook-grub.hook  		"$hooks"/archcraft-hook-grub.hook
   install -Dm 644 archcraft-hook-i3wm.hook  		"$hooks"/archcraft-hook-i3wm.hook
   install -Dm 644 archcraft-hook-nm.hook  			"$hooks"/archcraft-hook-nm.hook
   install -Dm 644 archcraft-hook-openbox.hook  		"$hooks"/archcraft-hook-openbox.hook

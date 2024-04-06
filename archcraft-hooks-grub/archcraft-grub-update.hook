@@ -1,0 +1,18 @@
+## Copyright (C) 2020-2024 Aditya Shakya <adi1090x@gmail.com>
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = Package
+Target = amd-ucode
+Target = grub-btrfs
+Target = intel-ucode
+Target = nvidia-dkms
+Target = nvidia-open-dkms
+Target = nvidia-470xx-dkms-tkg
+
+[Action]
+Description = Updating GRUB Config ...
+When = PostTransaction
+Exec = /usr/bin/update-grub

@@ -1,6 +1,40 @@
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
-@@ -350,7 +350,7 @@
+@@ -94,13 +94,13 @@
+   if [ x$type != xsimple ] ; then
+       case $type in
+ 	  booster)
+-	      title="$(gettext_printf "%s, with Linux %s (booster initramfs)" "${os}" "${version}")" ;;
++	      title="$(gettext_printf "%s, with Kernel: %s (booster initramfs)" "${os}" "${version}")" ;;
+ 	  fallback)
+-	      title="$(gettext_printf "%s, with Linux %s (fallback initramfs)" "${os}" "${version}")" ;;
++	      title="$(gettext_printf "%s, with Kernel: %s (fallback initramfs)" "${os}" "${version}")" ;;
+ 	  recovery)
+-	      title="$(gettext_printf "%s, with Linux %s (recovery mode)" "${os}" "${version}")" ;;
++	      title="$(gettext_printf "%s, with Kernel: %s (recovery mode)" "${os}" "${version}")" ;;
+ 	  *)
+-	      title="$(gettext_printf "%s, with Linux %s" "${os}" "${version}")" ;;
++	      title="$(gettext_printf "%s, with Kernel: %s" "${os}" "${version}")" ;;
+       esac
+       if [ x"$title" = x"$GRUB_ACTUAL_DEFAULT" ] || [ x"Previous Linux versions>$title" = x"$GRUB_ACTUAL_DEFAULT" ]; then
+ 	  replacement_title="$(echo "Advanced options for ${OS}" | sed 's,>,>>,g')>$(echo "$title" | sed 's,>,>>,g')"
+@@ -146,7 +146,6 @@
+   fi
+   message="$(gettext_printf "Loading Linux %s ..." ${version})"
+   sed "s/^/$submenu_indentation/" << EOF
+-	echo	'$(echo "$message" | grub_quote)'
+ 	linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
+ EOF
+   if test -n "${initrd}" ; then
+@@ -157,7 +156,6 @@
+       initrd_path="${initrd_path} ${rel_dirname}/${i}"
+     done
+     sed "s/^/$submenu_indentation/" << EOF
+-	echo	'$(echo "$message" | grub_quote)'
+ 	initrd	$(echo $initrd_path)
+ EOF
+   fi
+@@ -297,7 +295,7 @@
  	boot_device_id="$(grub_get_device_id "${GRUB_DEVICE}")"
      fi
      # TRANSLATORS: %s is replaced with an OS name
@@ -11,8 +45,8 @@
 
 --- a/util/grub.d/30_os-prober.in
 +++ b/util/grub.d/30_os-prober.in
-@@ -172,7 +172,7 @@
-       found_other_os=1
+@@ -155,7 +155,7 @@
+ 
  	  onstr="$(gettext_printf "(on %s)" "${DEVICE}")"
        cat << EOF
 -menuentry '$(echo "${LONGNAME} $onstr" | grub_quote)' $CLASS --class os \$menuentry_id_option 'osprober-chain-$(grub_get_device_id "${DEVICE}")' {
@@ -20,7 +54,7 @@
  EOF
        save_default_entry | grub_add_tab
        prepare_grub_to_access_device ${DEVICE} | grub_add_tab
-@@ -205,7 +205,7 @@
+@@ -187,7 +187,7 @@
  	DEVICE=${DEVICE%@*}
  	onstr="$(gettext_printf "(on %s)" "${DEVICE}")"
        cat << EOF
@@ -29,7 +63,7 @@
  EOF
        save_default_entry | sed -e "s/^/\t/"
        prepare_grub_to_access_device ${DEVICE} | sed -e "s/^/\t/"
-@@ -285,7 +285,7 @@
+@@ -266,7 +266,7 @@
          cat << EOF
  }
  EOF
@@ -41,15 +75,15 @@
 
 --- a/util/grub.d/30_uefi-firmware.in
 +++ b/util/grub.d/30_uefi-firmware.in
-@@ -32,7 +32,7 @@
- 
- cat << EOF
+@@ -34,7 +34,7 @@
  if [ "\$grub_platform" = "efi" ]; then
--	menuentry '$LABEL' \$menuentry_id_option 'uefi-firmware' {
-+	menuentry '$LABEL' --class efi \$menuentry_id_option 'uefi-firmware' {
- 		fwsetup
+ 	fwsetup --is-supported
+ 	if [ "\$?" = 0 ]; then
+-		menuentry '$LABEL' \$menuentry_id_option 'uefi-firmware' {
++		menuentry '$LABEL' --class efi \$menuentry_id_option 'uefi-firmware' {
+ 			fwsetup
  		}
- fi
+ 	fi
 
 --- a/util/grub.d/40_custom.in
 +++ b/util/grub.d/40_custom.in
@@ -65,3 +99,4 @@
 +menuentry 'Shutdown Computer' --class shutdown {
 +    halt
 +}
+

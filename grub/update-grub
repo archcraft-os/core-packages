@@ -1,7 +1,0 @@
-#! /bin/sh
-set -e
-grub-mkconfig -o /boot/grub/grub.cfg "$@"
-
-# workaround for https://git.savannah.gnu.org/cgit/grub.git/commit/?id=3cf2e848bc03c44d30bb87e583d12efe7e7ccf75
-# if grub is not updated in MBR/EFI dashes still won't work, hence we remove them
-sed -i -e '/cryptomount -u/ {s/-//g;s/ u/ -u/g}' /boot/grub/grub.cfg

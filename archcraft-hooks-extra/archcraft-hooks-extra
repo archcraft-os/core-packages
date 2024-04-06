@@ -23,22 +23,6 @@ fix_nmd() {
 	cp -rf /usr/bin/networkmanager_dmenu /usr/bin/nmd && sed -i -e 's/config.ini/nmd.ini/g' /usr/bin/nmd
 }
 
-fix_grub() {
-	## Fix GRUB_DISTRIBUTOR for Archcraft
-	sed -i -e 's/GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="Archcraft"/g' /etc/default/grub
-	cat /etc/grub.d/10_linux | grep 'OS="${GRUB_DISTRIBUTOR} Linux"' &>/dev/null
-	if [[ "$?" == 0 ]]; then
-		sed -i -e 's/OS="${GRUB_DISTRIBUTOR} Linux"/OS="${GRUB_DISTRIBUTOR}"/g' /etc/grub.d/10_linux
-	fi
-}
-
-fix_i3wm() {
-	dfile='/usr/share/xsessions/i3-with-shmlog.desktop'
-	if [[ -e "$dfile" ]]; then
-		rm -rf "$dfile"
-	fi
-}
-
 fix_xfce_notify() {
 	dbus_file='/usr/share/dbus-1/services/org.xfce.xfce4-notifyd.Notifications.service'
 	if [[ -e "$dbus_file" ]]; then
@@ -52,9 +36,7 @@ main() {
     case "$hookname" in
         fix-openbox)  		fix_openbox ;;
         fix-thunar)   		fix_thunar ;;
-        fix-i3wm)     		fix_i3wm ;;
         fix-nmd)      		fix_nmd ;;
-        fix-grub)     		fix_grub ;;
         fix-xfce-notify)    fix_xfce_notify ;;
         "")           		echo "Nothing to do!";;
     esac

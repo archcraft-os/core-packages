@@ -1,12 +1,14 @@
+## Copyright (C) 2020-2024 Aditya Shakya <adi1090x@gmail.com>
+
 [Trigger]
-Type = Path
 Operation = Install
 Operation = Upgrade
 Operation = Remove
+Type = File
 Target = usr/lib/modules/*/vmlinuz
-Target = boot/vmlinuz*
 
 [Action]
-Description = Updating Grub-Bootmenu
+Description = Updating GRUB Config ...
+Depends = grub
 When = PostTransaction
 Exec = /usr/bin/update-grub

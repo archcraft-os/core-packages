@@ -1,0 +1,41 @@
+# Maintainer: Aditya Shakya <adi1090x@gmail.com>
+
+pkgname="archcraft-hooks-grub"
+pkgver=1.0
+pkgrel=0
+pkgdesc='GRUB hooks for Archcraft'
+arch=('any')
+url="https://github.com/archcraft-os/core-packages"
+license=('GPL3')
+depends=('coreutils' 'efibootmgr' 'gawk' 'grep' 'grub' 'lsb-release')
+optdepends=('os-prober')
+source=(
+		'archcraft-grub-install.hook'
+		'archcraft-grub-kernel.hook'
+		'archcraft-grub-update.hook'
+		'archcraft-install-grub'
+		'archcraft-install-grub.conf'
+		'update-grub'
+)
+sha512sums=('c053fc7be8aaaa35e43a559ae5a6f6bbc184df74cccd0a1674b1834064436e7fcd18c38a150aa453b46d19bc98071a30139b9735eacb8b373b1c965d1338961e'
+            '3c2084a071ef11a98ed436fc1f6132f023d8b51d381a3aaa58f3b72cc3105272e1c24f85cfb69919da5fdf245b53d7f8cd4e9a74c4e0e7a36de519e2a0934a65'
+            'ffabc2d023bd29d4b07be523376f51a60b168fb70310d95a80daf5e21d95a185f1e12cc729c3d7e3512ee4522691936c280c61feae3552bc8ff5ef5094cc26ac'
+            'ca4e02df020b6b878917114e48b5ca0d7b7ade1cd322b9d353c361c8d823f85742bf1a743ffeeae5c2b5ea61fdbda2c9de07861f9942f7cd8a6f4e48dba4c0ed'
+            'c8f14134f761f15ccd0c1e6b0ad5592040a50062c5dfe6735ca73ccb9fd789b48c967957f371a6fc1914a8d8bd774dcbfcbf3c1c7a7b1073256241b1b50ca4da'
+            'c951ed1371c3b3c2faae9b546258a2d2d0b08df5c9fcbd12c54e6887b4e3aec679d86553eb094043b20b9bc5fd1aeb2afe296cac1f76e91462486b65e7542d7b')
+backup=('etc/archcraft-install-grub.conf')
+conflicts=('grub-update')
+
+package() {
+	local hooks="$pkgdir"/usr/share/libalpm/hooks
+	local bin="$pkgdir"/usr/bin
+	
+	install -Dm 644 archcraft-grub-install.hook  "$hooks"/archcraft-grub-install.hook
+	install -Dm 644 archcraft-grub-kernel.hook   "$hooks"/archcraft-grub-kernel.hook
+	install -Dm 644 archcraft-grub-update.hook   "$hooks"/archcraft-grub-update.hook
+
+	install -Dm 755 archcraft-install-grub       "$bin"/archcraft-install-grub
+	install -Dm 755 update-grub                  "$bin"/update-grub
+
+	install -Dm 644 archcraft-install-grub.conf  "${pkgdir}"/etc/archcraft-install-grub.conf
+}

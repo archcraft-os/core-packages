@@ -1,0 +1,11 @@
+## Copyright (C) 2020-2024 Aditya Shakya <adi1090x@gmail.com>
+
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = grub
+
+[Action]
+Description = Installing Grub to MBR/EFI ...
+When = PostTransaction
+Exec = /usr/bin/archcraft-install-grub

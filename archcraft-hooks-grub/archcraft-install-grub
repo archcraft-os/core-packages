@@ -1,0 +1,196 @@
+#!/bin/bash
+
+if [[ $EUID -ne 0 ]]; then
+    echo "$0: You must run this as root"
+    exit 2
+fi
+
+# User interactivity
+yes_no()
+{
+  read -p "Do you want to proceed? (yes/no) " yn
+
+  case $yn in
+	yes | y ) echo ok, we will proceed;;
+	no | n ) echo exiting...;
+		exit;;
+	* ) echo invalid response;
+		exit 1;;
+  esac
+}
+
+# Get config file item
+config_item()
+{
+  for x in /etc/default/grub /etc/default/grub.d/*.cfg; do
+    if [ -e "$x" ]; then
+	# Lose any output here so we don't confuse our
+	# caller. The xen packages echo stuff here, Aargh!
+      . "$x" > /dev/null
+    fi
+  done
+  if [ "$(eval echo "\${$1+set}")" = set ]; then
+    eval echo "\$$1"
+  else
+    return
+  fi
+}
+
+# Scan for GRUB2 on MBR
+scan_grub2()
+{
+  $debug && echo "[D] Scanning for GRUB 2 installation ..." > /tmp/install-grub.log
+  if ! dd if="$1" bs=512 count=1 2>/dev/null | grep -aq GRUB; then
+    # No version of GRUB is installed.
+    echo "Warning: No version of GRUB is installed." >> /tmp/install-grub.log
+    return 1
+  fi
+
+  # The GRUB boot sector always starts with a JMP instruction.
+  initial_jmp="$(dd if="$1" bs=2 count=1 2>/dev/null | od -Ax -tx1 | \
+                 head -n1 | cut -d' ' -f2,3)"
+  [ "$initial_jmp" ] || return 1
+  $debug && echo "[D] JMP instructions: $initial_jmp" >> /tmp/install-grub.log
+  initial_jmp_opcode="${initial_jmp%% *}"
+  $debug && echo "[D] Initial JMP opcode: $initial_jmp_opcode" >> /tmp/install-grub.log
+  [ "$initial_jmp_opcode" = eb ] || return 1
+  initial_jmp_operand="${initial_jmp#* }"
+  $debug && echo "[D] Initial JMP operand: $initial_jmp_operand" >> /tmp/install-grub.log
+  case $initial_jmp_operand in
+    47|4b|4c|63)
+      # should cover all versions of GRUB 2
+      # GRUB 1 always had 48 here.
+      $debug && echo "[D] GRUB 2 installation found on: $1" >> /tmp/install-grub.log
+      return 0
+    ;;
+  esac
+
+  return 1
+}
+
+bootloader_id="$(config_item GRUB_DISTRIBUTOR | cut -d' ' -f1)"
+grub_type=""
+efi_target=""
+efi_grub_file=""
+efi_boot_file=""
+fallback_is_same=false
+failed_update=false
+_grub_install=""
+debug=false
+interactive=false
+conf_file=/etc/archcraft-install-grub.conf
+if test -f $conf_file ; then
+  . $conf_file
+fi
+[[ -e "/var/lib/pacman/db.lck" ]] && interactive=false
+
+if [[ -e "/boot/grub/i386-efi/core.efi" ]]; then
+    $debug && echo "[D] GRUB 2 EFI-x32 found"
+    grub_type="EFI"
+    efi_target="i386-efi"
+    efi_grub_file="grubia32.efi"
+    efi_boot_file="bootia32.efi"
+elif [[ -e "/boot/grub/arm64-efi/core.efi" ]]; then
+    $debug && echo "[D] GRUB 2 EFI-ARM64 found"
+    grub_type="EFI"
+    efi_target="arm64-efi"
+    efi_grub_file="grubaa64.efi"
+    efi_boot_file="bootaa64.efi"
+elif [[ -e "/boot/grub/loongarch64-efi/core.efi" ]]; then
+    $debug && echo "[D] GRUB 2 EFI-LongArch64 found"
+    grub_type="EFI"
+    efi_target="loongarch64-efi"
+    efi_grub_file="grubloongarch64.efi"
+    efi_boot_file="bootloongarch64.efi"
+elif [[ -e "/boot/grub/x86_64-efi/core.efi" ]]; then
+    $debug && echo "[D] GRUB 2 EFI-x64 found"
+    grub_type="EFI"
+    efi_target="x86_64-efi"
+    efi_grub_file="grubx64.efi"
+    efi_boot_file="bootx64.efi"
+elif [[ -e "/boot/grub/i386-pc/core.img" ]]; then
+    $debug && echo "[D] GRUB 2 MBR found"
+    grub_type="MBR"
+    disk_name="$(grub-probe -t disk /boot/grub || true)"
+fi
+
+if [[ $grub_type == "EFI" ]]; then
+    current_boot_entry="$(efibootmgr | awk 'match($0,/^BootCurrent: ([0-9a-fA-F]{4})$/,out) { current=out[1] } match($0,/^Boot([0-9a-fA-F]{4})\*? ([^:]+)\t/,out) { if (out[1]==current) print out[2] }')"
+    for path in $(lsblk -rno parttypename,mountpoint | \
+    awk -e '/EFI\\x20\(FAT-12\/16\/32\)|EFI\\x20System/ {print $2}' | tr -s '\n'); do
+        if [[ -e $path ]]; then
+            efi_directory="$path"
+            $debug && echo "[D] Checking EFI-Directory: $efi_directory"
+            if [[ ! -z "$efi_directory" ]]; then
+                efi_source_file="$(find $path -iwholename "*$bootloader_id/$efi_grub_file")"
+                $debug && [[ -e "$efi_source_file" ]] && echo "[D] Found EFI Bootloader: $efi_source_file"
+                efi_target_file="$(find $path -name $efi_boot_file)"
+                $debug && [[ -e "$efi_target_file" ]] && echo "[D] Found EFI Fallback: $efi_target_file"
+                if [[ -e "$efi_source_file" ]] && [[ -e "$efi_target_file" ]]; then
+                    cmp -s "$efi_source_file" "$efi_target_file" && fallback_is_same=true
+                    $debug && [[ "$fallback_is_same" == "true" ]] && \
+                    echo "[D] EFI Fallback matches EFI Bootloader"
+                fi
+                break
+            fi
+        fi
+    done
+    if [[ -z "$efi_directory" ]]; then
+        echo "WARNING: EFI directory not found! Grub couldn't be installed." >&2
+        exit 1
+    fi
+fi
+
+if [[ "$grub_type" == "EFI" ]] && [[ -e "/boot/grub/$efi_target/core.efi" ]] \
+    && [[ -e "$efi_source_file" ]]; then
+    _grub_install="grub-install --no-nvram --target=$efi_target --efi-directory=$efi_directory \
+--bootloader-id=$bootloader_id --recheck --force"
+elif [[ "$grub_type" == "MBR" ]] && $(scan_grub2 "$disk_name"); then
+    cat /tmp/install-grub.log
+    rm /tmp/install-grub.log
+    _grub_install="grub-install --target=i386-pc --boot-directory=/boot \
+--recheck --force $disk_name"
+fi
+
+if [[ -z "$_grub_install" ]]; then
+    echo "WARNING: Grub is not properly installed, system may not be bootable or other bootloader is used" >&2
+    exit 1
+else
+    $interactive && echo "Install command will be: $_grub_install"
+    $interactive && yes_no
+fi
+
+echo "Grub will be installed on: $grub_type"
+if ! $_grub_install ; then
+    echo "Failed: $_grub_install" >&2
+    echo "WARNING: Bootloader is not properly installed, system may not be bootable" >&2
+    failed_update=true
+    exit 1
+fi
+
+if [[ "$grub_type" == "EFI" ]] && [[ -e "$efi_source_file" ]] && [[ -e "$efi_target_file" ]] \
+     && [[ "$fallback_is_same" == "true" ]] && [[ "$failed_update" == "false" ]]; then
+    echo "Update UEFI Fallback file: $efi_source_file"
+    $interactive && yes_no
+    cp "$efi_source_file" "$efi_target_file"
+fi
+
+if [[ "$grub_type" == "MBR" ]] && [[ -e /etc/grub.d/30_uefi-firmware ]]; then
+    $debug && echo "[D] removing '/etc/grub.d/30_uefi-firmware'"
+    $interactive && yes_no
+    rm /etc/grub.d/30_uefi-firmware
+fi
+
+# Update Grub Menu
+if [[ "$failed_update" == "false" ]]; then
+    $interactive && echo "Update Grub Menu"
+    $interactive && yes_no
+    grub-mkconfig -o /boot/grub/grub.cfg
+fi
+
+if [[ "$grub_type" == "EFI" ]] && [[ "${current_boot_entry,,}" != "${bootloader_id,,}" ]] \
+    && [[ "$failed_update" == "false" ]]; then
+    echo "Warning: GRUB bootloader at $(dirname $efi_source_file) was updated,
+but it seems like you are not using it by default.
+Please check your EFI boot priorities!"
+fi

@@ -1,32 +1,32 @@
 # Maintainer: Aditya Shakya <@adi1090x>
 
 pkgname=archcraft-install-scripts
-pkgver=2.0
-pkgrel=9
+pkgver=3.0
+pkgrel=0
 pkgdesc='Archcraft Install Scripts'
 arch=('any')
 url="https://github.com/archcraft-os/core-packages"
 license=('GPL3')
-source=('chrooted_post_install.sh'
+source=('chrooted_autologin.sh'
+		'chrooted_desktop.sh'
+		'chrooted_post_install.sh'
 		'chrooted_post_install_nvidia.sh'
 		'post_install.sh'
-		'post_install_nvidia.sh'
-		'main_fix_autologin.sh'
-		'main_post_install.sh')
-sha512sums=('3e2642017fe923b343b84409bd63b2b11fb84471c66f314a1194fc05d9ef963f82176972b2886fc6ba281a1f2558ab8cfe35ffec11058fe627a8719fc49300a0'
+		'post_install_nvidia.sh')
+sha512sums=('98cf72bb034fa233c79accdb72e5ff658bb56996c81233d8d989333b62148e0f16c2926d4dca55039c7c21a9212092b480c03629ae6a22a0458600bb258bd6df'
+            '929472cdaba11719c19fe23ed34de1ff22370b0e1bd226ef31105d5cfc614aaf88bf53e734d1c6ffd64399b76a332889f8c702e7d28cb6f0001e16189750e8e9'
+            '3e2642017fe923b343b84409bd63b2b11fb84471c66f314a1194fc05d9ef963f82176972b2886fc6ba281a1f2558ab8cfe35ffec11058fe627a8719fc49300a0'
             '98fb2a67eb0163332a9682087f9a71b41281b53dbe1f923b3baa74abf4c8df690623b9b4abfee38ef2d89473da78592259dcc9cd1c373899c64b1a1e15bd455c'
             'b257b78f8f532ae0707f7b07966f72249f0dac3e6d307221ead161e63da51e213c3da7c01b49eb16f38c9cd944cf16f92c2d87951ee1222e1ebaadb3bff29105'
-            '5f2763a28caa844c05a683c0d5b566d89e3e072cb4f305266ebef1c6a2ea9bb5e9bd75f6ef090aebf8130ebc9c2350c8d11ca7ad4d3dc695a3988c17d6be8775'
-            '7f15ce0c3935cc892579dbb6596bfdce707b0236915d49c9c2fc5da2ee011a12075fe2aa769fd9c497d32f3258f7a9c6d44c13e7082fe479394b25e8e111f379'
-            '023ed1944464c62e54c31a85af67ddf70e4ec799b9f1f67efce61c37cd2cc4e13bd709015edfea091ce34b4afb0ccaaafa7e49c3b7fb0f0953e8de17c93cfbc7')
+            '5f2763a28caa844c05a683c0d5b566d89e3e072cb4f305266ebef1c6a2ea9bb5e9bd75f6ef090aebf8130ebc9c2350c8d11ca7ad4d3dc695a3988c17d6be8775')
 
 package() {
 	local bin="$pkgdir"/usr/bin
 	
+	install -Dm 755 chrooted_autologin.sh 			"$bin"/chrooted_autologin.sh
+	install -Dm 755 chrooted_desktop.sh 			"$bin"/chrooted_desktop.sh
 	install -Dm 755 chrooted_post_install.sh 		"$bin"/chrooted_post_install.sh
 	install -Dm 755 chrooted_post_install_nvidia.sh "$bin"/chrooted_post_install_nvidia.sh
 	install -Dm 755 post_install.sh 				"$bin"/post_install.sh
 	install -Dm 755 post_install_nvidia.sh 			"$bin"/post_install_nvidia.sh
-	install -Dm 755 main_fix_autologin.sh 			"$bin"/main_fix_autologin.sh
-	install -Dm 755 main_post_install.sh 			"$bin"/main_post_install.sh
 }

@@ -2,7 +2,7 @@
 
 pkgname=archcraft-install-scripts
 pkgver=3.0
-pkgrel=0
+pkgrel=1
 pkgdesc='Archcraft Install Scripts'
 arch=('any')
 url="https://github.com/archcraft-os/core-packages"
@@ -15,7 +15,7 @@ source=('chrooted_autologin.sh'
 		'post_install_nvidia.sh')
 sha512sums=('98cf72bb034fa233c79accdb72e5ff658bb56996c81233d8d989333b62148e0f16c2926d4dca55039c7c21a9212092b480c03629ae6a22a0458600bb258bd6df'
             '929472cdaba11719c19fe23ed34de1ff22370b0e1bd226ef31105d5cfc614aaf88bf53e734d1c6ffd64399b76a332889f8c702e7d28cb6f0001e16189750e8e9'
-            '3e2642017fe923b343b84409bd63b2b11fb84471c66f314a1194fc05d9ef963f82176972b2886fc6ba281a1f2558ab8cfe35ffec11058fe627a8719fc49300a0'
+            '37ed3d710e0ff1ac27aa0e5403a359d91c7badfc0046eddefaab61efd6eaddc72a58f1c629fbcfe0c27346a048feb7ea9663e60f29fc1307b4f0fed6f762cf1c'
             '98fb2a67eb0163332a9682087f9a71b41281b53dbe1f923b3baa74abf4c8df690623b9b4abfee38ef2d89473da78592259dcc9cd1c373899c64b1a1e15bd455c'
             'b257b78f8f532ae0707f7b07966f72249f0dac3e6d307221ead161e63da51e213c3da7c01b49eb16f38c9cd944cf16f92c2d87951ee1222e1ebaadb3bff29105'
             '5f2763a28caa844c05a683c0d5b566d89e3e072cb4f305266ebef1c6a2ea9bb5e9bd75f6ef090aebf8130ebc9c2350c8d11ca7ad4d3dc695a3988c17d6be8775')

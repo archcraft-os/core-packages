@@ -36,7 +36,9 @@ _manage_systemd_services() {
 							'cups.service'
 							'avahi-daemon.service'
 							'systemd-timesyncd.service'
-							'sddm-plymouth.service')
+							'sddm-plymouth.service'
+							'apparmor.service'
+							'ufw.service')
 	local _snapd_services=('apparmor.service'
 						   'snapd.apparmor.service'
 						   'snapd.socket')

@@ -1,0 +1,57 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+
+pkgname=kpmcore
+pkgver=24.08.2
+pkgrel=1
+pkgdesc='Library for managing partitions'
+arch=(x86_64)
+url='https://apps.kde.org/partitionmanager/'
+license=(GPL-2.0-or-later)
+depends=(gcc-libs
+         glibc
+         kcoreaddons
+         ki18n
+         kwidgetsaddons
+         polkit-qt6
+         qt6-base
+         smartmontools
+         util-linux-libs)
+makedepends=(extra-cmake-modules)
+optdepends=('bcachefs-tools: BCacheFS support'
+            'dosfstools: FAT32 support'
+            'e2fsprogs: ext2/3/4 support'
+            'exfat-utils: exFAT support'
+            'exfatprogs: exFAT support (alternative to exfat-utils)'
+            'f2fs-tools: F2FS support'
+            'fatresize: FAT resize support'
+	        'jfsutils: JFS support'
+            'nilfs-utils: nilfs support'
+            'ntfs-3g: NTFS support'
+            'udftools: UDF support'
+            'xfsprogs: XFS support')
+source=(https://download.kde.org/stable/release-service/$pkgver/src/$pkgname-$pkgver.tar.xz{,.sig}
+      "https://invent.kde.org/system/kpmcore/commit/7f304be3e42b7efb72f990eacf2fa3d7640ffa23.diff")
+sha256sums=('81d30f3322acb2eb8751e980af6c8b13fc3994683f4f902e588226b70a456795'
+            'SKIP'
+            '9ac325dfe094bbd401b6844d4a5c1cd00567a3808a83e590b2dcb9ea7af8c463')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87  # Christoph Feck <cfeck@kde.org>
+              D81C0CB38EB725EF6691C385BB463350D6EF31EF) # Heiko Becker <heiko.becker@kde.org>
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+
+  patch -R -p1 -i ${srcdir}/7f304be3e42b7efb72f990eacf2fa3d7640ffa23.diff
+
+}
+
+build() {
+  cmake -B build -S $pkgname-$pkgver \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib \
+    -DBUILD_TESTING=OFF
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}

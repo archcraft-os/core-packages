@@ -219,7 +219,6 @@ _remove_unwanted_packages() {
 							   'darkhttpd'
 							   'irssi'
 							   'lftp'
-							   'kitty-terminfo'
 							   'lynx'
 							   'mc'
 							   'ddrescue'

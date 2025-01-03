@@ -5,6 +5,7 @@
 
 ## GENERAL --------------------------------------------------------
 
+[general]
 ## Live config reload
 live_config_reload = true
 

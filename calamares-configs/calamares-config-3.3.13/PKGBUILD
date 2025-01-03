@@ -1,0 +1,21 @@
+# Maintainer: Aditya Shakya <adi1090x@gmail.com>
+
+pkgname=calamares-config
+pkgver=4.0
+pkgrel=0
+pkgdesc="Calamares configuration for Archcraft."
+arch=('any')
+url="https://github.com/archcraft-os/core-packages"
+license=('GPL')
+
+prepare() {
+	cp -af ../files/. "$srcdir"
+}
+
+package() {
+	# copy all files recursively in /etc/calamares
+	(find calamares -type f -exec install -Dm 644 "{}" "$pkgdir/etc/{}" \;)
+	# make scripts executable
+	chmod 755 "$pkgdir"/etc/calamares/launch.sh
+	chmod 755 "$pkgdir"/etc/calamares/branding/archcraft/test-slides.sh
+}

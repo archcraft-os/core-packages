@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Copyright (C) 2020-2024 Aditya Shakya <adi1090x@gmail.com>
+## Copyright (C) 2020-2025 Aditya Shakya <adi1090x@gmail.com>
 ##
 ## Post installation script for Archcraft (only to detect nvidia)
 

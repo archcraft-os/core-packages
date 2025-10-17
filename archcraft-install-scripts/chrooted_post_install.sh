@@ -272,6 +272,10 @@ _clean_target_system() {
 
 _perform_various_stuff() {
 
+	# Hack to Fix unbootable system BIOS/UEFI + BTRFS (autoinstall)
+	#mkdir -p /tmp/vmlinuz-hack && mv /boot/vmlinuz-* /tmp/vmlinuz-hack/ && find /tmp/vmlinuz-hack/ -maxdepth 1 -type f -exec sh -c 'dd if="$1" of="/boot/$(basename "$1")"' sh {} \;	
+	find /run/archiso/bootmnt/arch/boot/x86_64/vmlinuz-* -maxdepth 1 -type f -exec sh -c 'dd if="$1" of="/boot/$(basename "$1")"' sh {} \;
+
 	# Copy grub theme to boot directory
 	echo "+---------------------->>"
 	echo "[*] Copying grub theme to boot directory..."

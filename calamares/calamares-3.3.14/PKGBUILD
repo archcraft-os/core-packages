@@ -3,7 +3,7 @@
 
 pkgname=calamares
 pkgver=3.3.14
-pkgrel=3
+pkgrel=4
 pkgdesc='Distribution-independent installer framework'
 arch=('i686' 'x86_64')
 license=(GPL)
@@ -65,6 +65,9 @@ prepare() {
 
 	sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${pkgname}-${pkgver}/CMakeLists.txt"
 	sed -i -e "s/desired_size = 512 \* 1024 \* 1024  \# 512MiB/desired_size = 512 \* 1024 \* 1024 \* 4  \# 2048MiB/" "$srcdir/${pkgname}-${pkgver}/src/modules/fstab/main.py"
+	
+	# Fix ERROR: module not found: ‘crc32c_intel’
+	sed -i -e 's/modules.append("crc32c-intel".*/modules.append("crc32c")/' "$srcdir/${pkgname}-${pkgver}/src/modules/initcpiocfg/main.py"
 
 	# modify desktop file for Archcraft
 	sed -i -e 's#Exec=sh.*#Exec=sh -c "/etc/calamares/launch.sh"#g' "$srcdir/${pkgname}-${pkgver}/calamares.desktop"

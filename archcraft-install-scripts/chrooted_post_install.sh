@@ -166,7 +166,7 @@ _remove_unwanted_graphics_drivers() {
     echo "[*] Nvidia Card : $nvidia_card"
 	if [[ "$nvidia_card" == 'no' ]] ; then
 		echo "[*] Removing All Nvidia drivers from target system..."
-        _remove_pkgs_if_installed xf86-video-nouveau nvidia nvidia-settings nvidia-utils
+        _remove_pkgs_if_installed xf86-video-nouveau nvidia-open nvidia-settings nvidia-utils
 	fi
 
 	# Remove nvidia drivers
@@ -174,7 +174,7 @@ _remove_unwanted_graphics_drivers() {
     echo "[*] Nvidia Drivers : $nvidia_driver"
 	if [[ "$nvidia_driver" == 'no' ]] ; then
 		echo "[*] Removing Nvidia drivers from target system..."
-        _remove_pkgs_if_installed nvidia nvidia-settings nvidia-utils
+        _remove_pkgs_if_installed nvidia-open nvidia-settings nvidia-utils
 	fi
 
 	# Remove nouveau drivers

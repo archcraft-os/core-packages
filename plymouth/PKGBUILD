@@ -1,113 +1,107 @@
-# Maintainer: Taijian <taijian@posteo.de>
+# Maintainer: Balló György <ballogyor+arch at gmail dot com>
+# Contributor: Taijian <taijian@posteo.de>
 # Contributor: Sebastian Lau <lauseb644@gmail.com>
-# Contributor Damian01w <damian01w@gmail.com>
+# Contributor: Damian01w <damian01w@gmail.com>
 # Contributor: Padfoot <padfoot@exemail.com.au>
-#
 
 pkgname=plymouth
-pkgver=22.02.122
-pkgrel=6
-pkgdesc="A graphical boot splash screen with kernel mode-setting support"
-url="https://www.freedesktop.org/wiki/Software/Plymouth/"
-arch=('i686' 'x86_64')
-license=('GPL')
-
-depends=('libdrm' 'pango' 'systemd')
-makedepends=('docbook-xsl')
-optdepends=('cantarell-fonts: For text output, e.g. during decryption'
-        'xf86-video-fbdev: Support special graphic cards on early startup')
-backup=('etc/plymouth/plymouthd.conf')
-
-source=("https://gitlab.freedesktop.org/${pkgname}/${pkgname}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-      'archcraft-logo.png'
-       'plymouth.encrypt_hook'
-       'plymouth.encrypt_install'
-       'lxdm-plymouth.service'
-       'lightdm-plymouth.service'
-       'sddm-plymouth.service'
-       'plymouth-deactivate.service' # needed for sddm
-       'plymouth.initcpio_hook'
-       'plymouth.initcpio_install'
-       'sd-plymouth.initcpio_install'
-       'plymouth-quit.service.in.patch'
-       'plymouth-update-initrd.patch'
-       'plymouthd.conf.patch'
-       'ply-utils.c.patch'
-       'runstatedir.patch'
+pkgver=24.004.60
+pkgrel=14
+pkgdesc='Graphical boot splash screen'
+arch=(x86_64)
+url='https://www.freedesktop.org/wiki/Software/Plymouth/'
+license=(GPL-2.0-or-later)
+depends=(
+  adwaita-fonts
+  bash
+  cairo
+  filesystem
+  fontconfig
+  freetype2
+  glib2
+  glibc
+  libdrm
+  libevdev
+  libpng
+  libx11
+  libxkbcommon
+  pango
+  systemd-libs
+  xkeyboard-config
 )
-
-sha256sums=('8921cd61a9f32f5f8903ceffb9ab0defaef8326253e1549ef85587c19b7f2ab6'
-            'ea11a2fb6d247cf2460e78b3225e8c4383b2855fbbc53095898345ef66088279'
-            '748e0cfa0e10ab781bc202fceeed46e765ed788784f1b85945187b0f29eafad7'
-            '373ec20fe4c47e693a0c45cc06dd906e35dd1d70a85546bd1d571391de11763a'
-            '06b31999cf60f49e536c7a12bc1c4f75f2671feb848bf5ccb91a963147e2680d'
-            '86d0230d9393c9d83eb7bb430e6b0fb5e3f32e78fcd30f3ecd4e6f3c30b18f71'
-            'c39f526f7e99173bc8f012900f53257537a25e2d8c19e23df630f1fe9a7627ba'
-            '3b17ed58b59a4b60d904c60bba52bae7ad685aa8273f6ceaae08a15870c0a9eb'
-            '2a80e2cad8de428358647677afa166219589d3338c5f94838146c804a29e2769'
-            '98cd8e473359cab6eff10bc1523e6d6fc9cdd166dfbc2c79d7bf550d53b958b6'
-            'f844b7b1779db0f66125d5850b17f0f0d6176f8f6ffdb6f8b87a5d16ccf1e4a4'
-            'dec28b86ddea93704f8479d33e08f81cd7ff4ccaad57e9053c23bd046db2278a'
-            '74908ba59cea53c6a9ab67bb6dec1de1616f3851a0fd89bb3c157a1c54e6633a'
-            'feddc6d1fc950823fb9f71bd511314cb10a081d39c75be74eb87a9701b0d3b75'
-            '1bd7693d1e135fe9e22a03f7635309e2ae616e952665d9774eb5ca4d82718e1b'
-            '7c0224737119f949b8d5ca24c438f253b5734e3391a47e8f5f1dda28b8c4ab92')
+makedepends=(
+  docbook-xsl
+  git
+  gtk3
+  meson
+)
+optdepends=('gtk3: x11 renderer')
+backup=(
+  etc/logrotate.d/bootlog
+  etc/plymouth/plymouthd.conf
+)
+install='plymouth.install'
+source=(
+  "git+https://gitlab.freedesktop.org/plymouth/$pkgname.git#tag=$pkgver"
+  plymouth.initcpio_hook
+  plymouth.initcpio_install
+  plymouth-shutdown.initcpio_install
+  50-plymouth.conf
+  archcraft-logo.png
+  plymouthd.conf
+)
+b2sums=('a3d55f4f7be81bdf2ddd5c2b74a3fdb4e368c31fc41e12ab100ce2a7986cb418151b3df0d0316011710dd0e1ae99631166eecf80bc1dd5cc9054a4685266afed'
+        'afb2449b542aa3e971eab6b953c907347fdf4e499b4140a5e6736a7c99557c0d8d2fed28dbee56d84c8c619335c59bd382457d85e51145884ad0616e9095f232'
+        'e9efbfd924a07005e883c4cd21d25c520288daf8bf611ee20a245b8b8f925bc90188dfcbb9e13da883479c5214562795717bb4404dd7ef1444eb04ab69dad4a9'
+        '063448411de837ed38ece935719f07fd17b18830680c9fa95b7bd39a097778186c40373590504c9b44144125986304311f528c73592c29d19043b8395e6f99c2'
+        '5ab47942d222c311b495d056f24bdd9d08438162fef1ca6e51982fc00018acbf0c31e4c61164b40950fe2511e17ba2a4635894d145d83a9b349e5a8a83f8c026'
+        '6084349acab7f39e31192b945131f856fafc775e51ad7297a803ac2ce9452e66e8794de450be9f350113b1853fdfe68fb49ed8238e25a170dc427d7573eadf79'
+        '3967a5b7eb1f10f54733eceef64c7da1f0230c29fa8dc1b195d4d7b0efbea581bed5d4c1d84a36de790f820a0c761329f7021c250cb32aad547ff707e914a380')
 
 prepare() {
-	cd "$srcdir"/${pkgname}-${pkgver}
-	patch -p1 -i $srcdir/plymouth-update-initrd.patch
-	patch -p1 -i $srcdir/plymouth-quit.service.in.patch
-	patch -p1 -i $srcdir/plymouthd.conf.patch
-	# apply upstream patches
-	patch -p1 -i $srcdir/ply-utils.c.patch
-	patch -p1 -i $srcdir/runstatedir.patch
+  cd $pkgname
+
+  # Various fixes from upstream
+  git cherry-pick -n -m 1 24.004.60..e88c403bda64d301b0434045513551c1ccdee983
+
+  # Use mkinitcpio to update initrd
+  sed -i 's/^dracut -f$/mkinitcpio -P/' scripts/plymouth-update-initrd
+
+  # Change default theme
+  sed -i 's/^Theme=spinner$/Theme=archcraft/' src/plymouthd.defaults
+
+  # Switch from Cantarell to Adwaita Sans; set monospace font to Adwaita Mono
+  sed -i 's/Cantarell/Adwaita Sans/
+          /TitleFont=Adwaita/a MonospaceFont=Adwaita Mono 12' scripts/keymap-render.py themes/*/*.plymouth.desktop
 }
 
 build() {
-	cd "$srcdir"/${pkgname}-${pkgver}
+  arch-meson $pkgname build \
+    -D logo=/usr/share/pixmaps/archcraft-logo.png
+  meson compile -C build
 
-	LDFLAGS="$LDFLAGS -ludev" ./autogen.sh \
-		--prefix=/usr \
-		--exec-prefix=/usr \
-		--sysconfdir=/etc \
-		--localstatedir=/var \
-		--libdir=/usr/lib \
-		--libexecdir=/usr/lib \
-		--sbindir=/usr/bin \
-		--enable-systemd-integration \
-		--enable-drm \
-		--enable-tracing \
-		--enable-pango \
-		--enable-gtk=no \
-		--with-release-file=/etc/os-release \
-		--with-logo=/usr/share/plymouth/archcraft-logo.png \
-		--with-background-color=0x000000 \
-		--with-background-start-color-stop=0x000000 \
-		--with-background-end-color-stop=0x4D4D4D \
-		--without-rhgb-compat-link \
-		--without-system-root-install \
-		--runstatedir=/run
-
-	make
+  # Convert logo for the spinner theme
+  #rsvg-convert '/usr/share/pixmaps/archcraft-logo.svg' -o archcraft-logo.png
 }
 
 package() {
-	cd "$srcdir"/${pkgname}-${pkgver}
+  meson install -C build --destdir "$pkgdir"
+  rm -r "$pkgdir/run"
 
-	make DESTDIR="$pkgdir" install
+  # Install mkinitcpio hook
+  install -Dm644 plymouth.initcpio_hook "$pkgdir/usr/lib/initcpio/hooks/$pkgname"
+  install -Dm644 plymouth.initcpio_install "$pkgdir/usr/lib/initcpio/install/$pkgname"
 
-	install -Dm644 "$srcdir/archcraft-logo.png" "$pkgdir/usr/share/plymouth/archcraft-logo.png"
+  # Install mkinitcpio shutdown hook and systemd drop-in snippet
+  install -Dm644 plymouth-shutdown.initcpio_install "$pkgdir/usr/lib/initcpio/install/$pkgname-shutdown"
+  install -Dm644 50-plymouth.conf "$pkgdir/usr/lib/tmpfiles.d/50-plymouth.conf"
+  
+  # Install logo for the spinner theme
+  install -Dm644 archcraft-logo.png "$pkgdir/usr/share/$pkgname/themes/spinner/watermark.png"
 
-	install -Dm644 "$srcdir/plymouth.encrypt_hook" "$pkgdir/usr/lib/initcpio/hooks/plymouth-encrypt"
-	install -Dm644 "$srcdir/plymouth.encrypt_install" "$pkgdir/usr/lib/initcpio/install/plymouth-encrypt"
-	install -Dm644 "$srcdir/plymouth.initcpio_hook" "$pkgdir/usr/lib/initcpio/hooks/plymouth"
-	install -Dm644 "$srcdir/plymouth.initcpio_install" "$pkgdir/usr/lib/initcpio/install/plymouth"
-	install -Dm644 "$srcdir/sd-plymouth.initcpio_install" "$pkgdir/usr/lib/initcpio/install/sd-plymouth"
+  # Install plymouthd.conf config file
+  install -Dm644 plymouthd.conf "$pkgdir/etc/$pkgname/plymouthd.conf"
 
-	for i in {sddm,lxdm,lightdm}-plymouth.service; do
-		install -Dm644 "$srcdir/$i" "$pkgdir/usr/lib/systemd/system/$i"
-	done
-
-	install -Dm644 "$srcdir/plymouth-deactivate.service" 	"$pkgdir/usr/lib/systemd/system/plymouth-deactivate.service"
-	install -Dm644 "$pkgdir/usr/share/plymouth/plymouthd.defaults" "$pkgdir/etc/plymouth/plymouthd.conf"
+  # Fix archlinux-logo.png issue
+  sed -i -e 's/archlinux-logo.png/archcraft-logo.png/g' "$pkgdir/usr/lib/initcpio/install/$pkgname"
 }

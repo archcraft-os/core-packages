@@ -1,0 +1,147 @@
+# Maintainer:
+# Contributor: Aditya Shakya adi1090x@gmail.com
+
+_pkgname="calamares"
+pkgname="$_pkgname"
+pkgver=3.4.2
+pkgrel=1
+pkgdesc="Distribution-independent installer framework"
+url="https://codeberg.org/Calamares/calamares"
+license=("GPL-3.0-or-later")
+arch=('i686' 'x86_64')
+provides=('calamares')
+
+depends=(
+  'boost-libs'
+  'ckbcomp'
+  'cryptsetup'
+  'doxygen'
+  'efibootmgr'
+  'gptfdisk'
+  'gtk-update-icon-cache'
+  'hwinfo'
+  'icu'
+  'kconfig'
+  'kcrash'
+  'ki18n'
+  'kparts'
+  'kservice'
+  'kwidgetsaddons'
+  'mkinitcpio-openswap'
+  'polkit-qt6'
+  'rsync'
+  'solid'
+  'squashfs-tools'
+  'kcoreaddons'
+  'kpmcore'
+  'libpwquality'
+  'qt6-declarative'
+  'qt6-svg'
+  'yaml-cpp'
+)
+makedepends=(
+  'boost'
+  'cmake'
+  'git'
+  'python-jsonschema'
+  'python-pyaml'
+  'python-unidecode'
+  'extra-cmake-modules'
+  'libglvnd'
+  'ninja'
+  'qt6-tools'
+  'qt6-translations'
+)
+backup=('usr/share/calamares/modules/bootloader.conf'
+        'usr/share/calamares/modules/displaymanager.conf'
+        'usr/share/calamares/modules/initcpio.conf'
+        'usr/share/calamares/modules/unpackfs.conf')
+
+_pkgext="tar.gz"
+source=("$_pkgname-$pkgver.$_pkgext"::"$url/releases/download/v$pkgver/$_pkgname-$pkgver.$_pkgext"
+        "49-nopasswd-calamares.rules")
+sha256sums=('733bbbb00dc9f84874bd5c22960952f317ea2537565431179fa2152b2fbfdccc'
+            'd56803756e0863524914db9aa747451e7485e290718ff7996749597d978f94e0')
+
+prepare() {
+	sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${_pkgname}-${pkgver}/CMakeLists.txt"
+	sed -i -e "s/desired_size = 512 \* 1024 \* 1024  \# 512MiB/desired_size = 512 \* 1024 \* 1024 \* 4  \# 2048MiB/" "$srcdir/${_pkgname}-${pkgver}/src/modules/fstab/main.py"
+	
+	# modify desktop file for Archcraft
+	sed -i -e 's#Exec=sh.*#Exec=sh -c "/etc/calamares/launch.sh"#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
+	sed -i -e 's#Name=.*#Name=Install Archcraft#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
+	sed -i -e 's#GenericName=.*#GenericName=System Installer#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
+	sed -i -e 's#Icon=.*#Icon=archcraft-green#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
+	sed -i -e 's#Comment=.*#Comment=Archcraft System Installer#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
+}
+
+build() {
+  local _skip_modules=(
+    dracut
+    dracutlukscfg
+    dummycpp
+    dummyprocess
+    dummypython
+    dummypythonqt
+    initramfs
+    initramfscfg
+    interactiveterminal
+    packagechooserq
+    services-openrc
+    keyboardq
+    license
+    localeq
+    oemid
+    partitionq
+    summaryq
+    tracking
+    usersq
+    welcomeq
+    zfs
+    zfshostid
+  )
+
+  # Correct source directory (inside src/)
+  local _pkgsrc_dir="$srcdir/$_pkgname-$pkgver"
+
+  local _cmake_options=(
+    -B build
+    -S "$_pkgsrc_dir"
+    -G Ninja
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX='/usr'
+    -DCMAKE_INSTALL_LIBDIR='lib'
+    -DWITH_APPSTREAM=OFF
+    -DWITH_PYBIND11=OFF
+    -DWITH_QT6=ON
+    -DINSTALL_CONFIG=ON
+    -DSKIP_MODULES="${_skip_modules[*]}"
+    -DBUILD_TESTING=OFF
+
+    # Explicit KDE install dirs to suppress warnings
+    -DKDE_INSTALL_BINDIR=/usr/bin
+    -DKDE_INSTALL_SBINDIR=/usr/sbin
+    -DKDE_INSTALL_LIBDIR=/usr/lib
+    -DKDE_INSTALL_LIBEXECDIR=/usr/libexec
+    -DKDE_INSTALL_INCLUDEDIR=/usr/include
+    -DKDE_INSTALL_LOCALSTATEDIR=/var
+    -DKDE_INSTALL_SHAREDSTATEDIR=/usr/share
+    -DKDE_INSTALL_DATAROOTDIR=/usr/share
+    -DKDE_INSTALL_DATADIR=/usr/share
+    -DKDE_INSTALL_LOCALEDIR=/usr/share/locale
+    -DKDE_INSTALL_MANDIR=/usr/share/man
+    -DKDE_INSTALL_INFODIR=/usr/share/info
+    -DKDE_INSTALL_SYSCONFDIR=/etc
+
+    -Wno-dev
+  )
+
+  cmake "${_cmake_options[@]}"
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 "${srcdir}/49-nopasswd-calamares.rules" "$pkgdir/etc/polkit-1/rules.d/49-nopasswd-calamares.rules"
+  chmod 750 "$pkgdir"/etc/polkit-1/rules.d
+}

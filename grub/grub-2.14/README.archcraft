@@ -1,0 +1,38 @@
+# Patches:
+1. To fix the issues with : glibc-2.43-c23. Can be deleted once upstream source is updated
+- 0004-fix-build-with-glibc-2.43-c23.patch
+- 0005-gcc16-regparm.patch
+
+2. Archcraft specific, created self
+- 0006-archcraft-theming-patch.patch
+
+3. Ubuntu patches for quiet grub
+- 0007-grub-maybe-quiet.patch
+- 0007-grub-hide-loading-texts.patch
+- 0008-grub-gettext-quiet.patch
+- 0009-grub-quick-boot.patch
+
+4. Modified patch '0007-grub-maybe-quiet.patch' (removed 10_linux.in related changes)
+and created separate '0007-grub-hide-loading-texts.patch' to fix issues with 10_linux file
+
+5. Modified 'grub.default' file and added Archcraft specific changes
+
+6. Modified PKGBUILD, added patches, config options, etc
+
+---
+
+# Patch Apply Order:
+0001-00_header-add-GRUB_COLOR_-variables.patch
+0002-10_linux-detect-archlinux-initramfs.patch
+0003-support-dropins-for-default-configuration.patch
+0004-fix-build-with-glibc-2.43-c23.patch
+0005-gcc16-regparm.patch
+0006-archcraft-theming-patch.patch
+0007-grub-maybe-quiet.patch
+0007-grub-hide-loading-texts.patch
+0008-grub-gettext-quiet.patch
+0009-grub-quick-boot.patch
+
+---
+
+

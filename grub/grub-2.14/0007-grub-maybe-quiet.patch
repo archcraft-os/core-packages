@@ -1,0 +1,325 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Tue, 25 Jul 2023 15:35:52 +0200
+Subject: Add configure option to reduce visual clutter at boot time
+
+If this option is enabled, then do all of the following:
+
+Don't display introductory message about line editing unless we're
+actually offering a shell prompt.  (This is believed to be a workaround
+for a different bug.  We'll go with this for now, but will drop this in
+favour of a better fix upstream if somebody figures out what that is.)
+
+Don't clear the screen just before booting if we never drew the menu in
+the first place.
+
+Remove verbose messages printed before reading configuration.  In some
+ways this is awkward because it makes debugging harder, but it's a
+requirement for a smooth-looking boot process; we may be able to do
+better in future.  Upstream doesn't want this, though.
+
+Disable the cursor as well, for similar reasons of tidiness.
+
+Suppress kernel/initrd progress messages, except in recovery mode.
+
+Suppress "GRUB loading" message unless Shift is held down.  Upstream
+doesn't want this, as it makes debugging harder.  Ubuntu wants it to
+provide a cleaner boot experience.
+
+Author: Will Thompson <will@willthompson.co.uk>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/386922
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/861048
+Forwarded: (partial) http://lists.gnu.org/archive/html/grub-devel/2009-09/msg00056.html
+Last-Update: 2021-09-24
+
+Patch-Name: maybe-quiet.patch
+---
+
+diff --unified --recursive --text a/config.h.in b/config.h.in
+--- a/config.h.in	2025-03-01 11:37:53.536776788 -0700
++++ b/config.h.in	2025-03-01 11:39:15.340270160 -0700
+@@ -16,6 +16,8 @@
+ /* Define to 1 to enable disk cache statistics.  */
+ #define DISK_CACHE_STATS @DISK_CACHE_STATS@
+ #define BOOT_TIME_STATS @BOOT_TIME_STATS@
++/* Define to 1 to make GRUB quieter at boot time.  */
++#define QUIET_BOOT @QUIET_BOOT@
+ 
+ /* We don't need those.  */
+ #define MINILZO_CFG_SKIP_LZO_PTR 1
+diff --unified --recursive --text a/configure.ac b/configure.ac
+--- a/configure.ac	2025-03-01 11:37:55.431585884 -0700
++++ b/configure.ac	2025-03-01 11:39:15.340499855 -0700
+@@ -2092,6 +2092,17 @@
+ fi
+ AC_SUBST([enable_grub_protect])
+ 
++AC_ARG_ENABLE([quiet-boot],
++              [AS_HELP_STRING([--enable-quiet-boot],
++                              [emit fewer messages at boot time (default=no)])],
++              [], [enable_quiet_boot=no])
++if test x"$enable_quiet_boot" = xyes ; then
++  QUIET_BOOT=1
++else
++  QUIET_BOOT=0
++fi
++AC_SUBST([QUIET_BOOT])
++
+ LIBS=""
+ 
+ AC_SUBST([FONT_SOURCE])
+@@ -2373,5 +2384,10 @@
+ else
+ echo "With stack smashing protector: No"
+ fi
++if [ x"$enable_quiet_boot" = xyes ]; then
++echo With quiet boot: Yes
++else
++echo With quiet boot: No
++fi
+ echo "*******************************************************"
+ ]
+diff --unified --recursive --text a/grub-core/boot/i386/pc/boot.S b/grub-core/boot/i386/pc/boot.S
+--- a/grub-core/boot/i386/pc/boot.S	2025-03-01 11:37:53.541515715 -0700
++++ b/grub-core/boot/i386/pc/boot.S	2025-03-01 11:39:15.340679388 -0700
+@@ -19,6 +19,9 @@
+ 
+ #include <grub/symbol.h>
+ #include <grub/machine/boot.h>
++#if QUIET_BOOT && !defined(HYBRID_BOOT)
++#include <grub/machine/memory.h>
++#endif
+ 
+ /*
+  *  defines for the code go here
+@@ -249,9 +252,17 @@
+ 	/* save drive reference first thing! */
+ 	pushw	%dx
+ 
++#if QUIET_BOOT && !defined(HYBRID_BOOT)
++	/* is either shift key held down? */
++	movw	$(GRUB_MEMORY_MACHINE_BIOS_DATA_AREA_ADDR + 0x17), %bx
++	testb	$3, (%bx)
++	jz	2f
++#endif
++
+ 	/* print a notification message on the screen */
+ 	MSG(notification_string)
+ 
++2:
+ 	/* set %si to the disk address packet */
+ 	movw	$disk_address_packet, %si
+ 
+diff --unified --recursive --text a/grub-core/boot/i386/pc/diskboot.S b/grub-core/boot/i386/pc/diskboot.S
+--- a/grub-core/boot/i386/pc/diskboot.S	2025-03-01 11:37:53.541605688 -0700
++++ b/grub-core/boot/i386/pc/diskboot.S	2025-03-01 11:39:15.340751520 -0700
+@@ -18,6 +18,9 @@
+ 
+ #include <grub/symbol.h>
+ #include <grub/machine/boot.h>
++#if QUIET_BOOT
++#include <grub/machine/memory.h>
++#endif
+ 
+ /*
+  *  defines for the code go here
+@@ -25,6 +28,12 @@
+ 
+ #define MSG(x)	movw $x, %si; call LOCAL(message)
+ 
++#if QUIET_BOOT
++#define SILENT(x)	call LOCAL(check_silent); jz LOCAL(x)
++#else
++#define SILENT(x)
++#endif
++
+ 	.file	"diskboot.S"
+ 
+ 	.text
+@@ -50,11 +59,14 @@
+ 	/* save drive reference first thing! */
+ 	pushw	%dx
+ 
++	SILENT(after_notification_string)
++
+ 	/* print a notification message on the screen */
+ 	pushw	%si
+ 	MSG(notification_string)
+ 	popw	%si
+ 
++LOCAL(after_notification_string):
+ 	/* this sets up for the first run through "bootloop" */
+ 	movw	$LOCAL(firstlist), %di
+ 
+@@ -279,7 +291,10 @@
+ 	/* restore addressing regs and print a dot with correct DS
+ 	   (MSG modifies SI, which is saved, and unused AX and BX) */
+ 	popw	%ds
++	SILENT(after_notification_step)
+ 	MSG(notification_step)
++
++LOCAL(after_notification_step):
+ 	popa
+ 
+ 	/* check if finished with this dataset */
+@@ -295,8 +310,11 @@
+ /* END OF MAIN LOOP */
+ 
+ LOCAL(bootit):
++	SILENT(after_notification_done)
+ 	/* print a newline */
+ 	MSG(notification_done)
++
++LOCAL(after_notification_done):
+ 	popw	%dx	/* this makes sure %dl is our "boot" drive */
+ 	ljmp	$0, $(GRUB_BOOT_MACHINE_KERNEL_ADDR + 0x200)
+ 
+@@ -320,6 +338,14 @@
+ /* go here when you need to stop the machine hard after an error condition */
+ LOCAL(stop):	jmp	LOCAL(stop)
+ 
++#if QUIET_BOOT
++LOCAL(check_silent):
++	/* is either shift key held down? */
++	movw	$(GRUB_MEMORY_MACHINE_BIOS_DATA_AREA_ADDR + 0x17), %bx
++	testb	$3, (%bx)
++	ret
++#endif
++
+ notification_string:	.asciz "loading"
+ 
+ notification_step:	.asciz "."
+diff --unified --recursive --text a/grub-core/kern/main.c b/grub-core/kern/main.c
+--- a/grub-core/kern/main.c	2025-03-01 11:37:55.097954330 -0700
++++ b/grub-core/kern/main.c	2025-03-01 12:04:50.426115672 -0700
+@@ -303,6 +303,10 @@
+ void __attribute__ ((noreturn))
+ grub_main (void)
+ {
++#if QUIET_BOOT
++  struct grub_term_output *term;
++#endif
++
+ #ifdef GRUB_STACK_PROTECTOR
+   /*
+    * This call should only be made from a function that does not return because
+@@ -318,6 +322,11 @@
+ 
+   grub_boot_time ("After machine init.");
+ 
++#if QUIET_BOOT
++  /* Disable the cursor until we need it.  */
++  FOR_ACTIVE_TERM_OUTPUTS(term)
++    grub_term_setcursor (term, 0);
++#else
+   /* This breaks flicker-free boot on EFI systems, so disable it there. */
+ #ifndef GRUB_MACHINE_EFI
+   /* Hello.  */
+@@ -325,6 +334,7 @@
+   grub_printf ("Welcome to GRUB!\n\n");
+   grub_setcolorstate (GRUB_TERM_COLOR_STANDARD);
+ #endif
++#endif
+ 
+   /* Init verifiers API. */
+   grub_verifiers_init ();
+@@ -366,5 +376,12 @@
+   grub_boot_time ("After execution of embedded config. Attempt to go to normal mode");
+ 
+   grub_load_normal_mode ();
++
++#if QUIET_BOOT
++  /* If we have to enter rescue mode, enable the cursor again.  */
++  FOR_ACTIVE_TERM_OUTPUTS(term)
++    grub_term_setcursor (term, 1);
++#endif
++
+   grub_rescue_run ();
+ }
+diff --unified --recursive --text a/grub-core/kern/rescue_reader.c b/grub-core/kern/rescue_reader.c
+--- a/grub-core/kern/rescue_reader.c	2025-03-01 11:37:54.538961152 -0700
++++ b/grub-core/kern/rescue_reader.c	2025-03-01 11:48:11.537229453 -0700
+@@ -91,7 +91,9 @@
+       while (1);
+     }
+ 
++#if QUIET_BOOT
+   grub_printf ("Entering rescue mode...\n");
++#endif
+ 
+   while (1)
+     {
+diff --unified --recursive --text a/grub-core/normal/main.c b/grub-core/normal/main.c
+--- a/grub-core/normal/main.c	2025-03-01 11:37:55.166728578 -0700
++++ b/grub-core/normal/main.c	2025-03-01 11:39:15.341078094 -0700
+@@ -408,6 +408,15 @@
+ grub_normal_read_line_real (char **line, int cont, int nested)
+ {
+   const char *prompt;
++#if QUIET_BOOT
++  static int displayed_intro;
++
++  if (! displayed_intro)
++    {
++      grub_normal_reader_init (nested);
++      displayed_intro = 1;
++    }
++#endif
+ 
+   if (cont)
+     /* TRANSLATORS: it's command line prompt.  */
+@@ -464,7 +473,9 @@
+       return;
+     }
+ 
++#if !QUIET_BOOT
+   grub_normal_reader_init (nested);
++#endif
+ 
+   while (1)
+     {
+diff --unified --recursive --text a/grub-core/normal/menu.c b/grub-core/normal/menu.c
+--- a/grub-core/normal/menu.c	2025-03-01 11:37:55.314026263 -0700
++++ b/grub-core/normal/menu.c	2025-03-01 11:54:24.730080713 -0700
+@@ -815,14 +815,18 @@
+ static void
+ notify_booting (grub_menu_entry_t entry, void *userdata)
+ {
++#if !QUIET_BOOT
+   int *notify_boot = userdata;
+-
+   if (*notify_boot)
+     {
+       grub_printf ("  ");
+       grub_printf_ (N_("Booting `%s'"), entry->title);
+       grub_printf ("\n\n");
+     }
++#else
++  (void) userdata;
++  (void) entry;
++#endif
+ }
+ 
+ /* Callback invoked when a default menu entry executed because of a timeout
+@@ -871,6 +875,9 @@
+       grub_menu_entry_t e;
+       int auto_boot;
+       int notify_boot;
++#if QUIET_BOOT
++      int initial_timeout = grub_menu_get_timeout ();
++#endif
+ 
+       boot_entry = run_menu (menu, nested, &auto_boot, &notify_boot);
+       if (boot_entry < 0)
+@@ -885,7 +892,11 @@
+ 					 &execution_callback, &notify_boot);
+       else
+ 	{
+-	  grub_cls ();
++#if QUIET_BOOT
++      /* Only clear the screen if we drew the menu in the first place.  */
++      if (initial_timeout != 0)
++#endif
++	grub_cls ();
+ 	  grub_menu_execute_entry (e, 0);
+ 	}
+       if (autobooted)

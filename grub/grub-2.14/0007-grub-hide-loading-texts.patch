@@ -1,0 +1,57 @@
+From 25c89d4c73e5b5479f974ae0340e46c845a2b541 Mon Sep 17 00:00:00 2001
+From: adi1090x <adi1090x@gmail.com>
+Date: Mon, 13 Jul 2026 14:14:50 +0530
+Subject: [PATCH] grub-hide-loading-texts
+
+---
+ util/grub.d/10_linux.in | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index 07649cd..8160ff3 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -20,6 +20,7 @@ set -e
+ prefix="@prefix@"
+ exec_prefix="@exec_prefix@"
+ datarootdir="@datarootdir@"
++quiet_boot="@QUIET_BOOT@"
+ 
+ . "$pkgdatadir/grub-mkconfig_lib"
+ 
+@@ -140,20 +141,28 @@ linux_entry ()
+     fi
+     printf '%s\n' "${prepare_boot_cache}" | sed "s/^/$submenu_indentation/"
+   fi
+-  message="$(gettext_printf "Loading Linux %s ..." ${version})"
+-  sed "s/^/$submenu_indentation/" << EOF
++  if [ x"$quiet_boot" = x0 ]; then
++    message="$(gettext_printf "Loading Linux %s ..." ${version})"
++    sed "s/^/$submenu_indentation/" << EOF
+ 	echo	'$(echo "$message" | grub_quote)'
++EOF
++  fi
++  sed "s/^/$submenu_indentation/" << EOF
+ 	linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
+ EOF
+   if test -n "${initrd}" ; then
+     # TRANSLATORS: ramdisk isn't identifier. Should be translated.
+-    message="$(gettext_printf "Loading initial ramdisk ...")"
++    if [ x"$quiet_boot" = x0 ]; then
++      message="$(gettext_printf "Loading initial ramdisk ...")"
++      sed "s/^/$submenu_indentation/" << EOF
++	echo	'$(echo "$message" | grub_quote)'
++EOF
++    fi
+     initrd_path=
+     for i in ${initrd}; do
+       initrd_path="${initrd_path} ${rel_dirname}/${i}"
+     done
+     sed "s/^/$submenu_indentation/" << EOF
+-	echo	'$(echo "$message" | grub_quote)'
+ 	initrd	$(echo $initrd_path)
+ EOF
+   fi
+-- 
+2.55.0
+

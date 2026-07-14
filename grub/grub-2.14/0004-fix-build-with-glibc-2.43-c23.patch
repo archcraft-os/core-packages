@@ -1,0 +1,119 @@
+From 2b30661c42141edfd514017c1ab3b5f6fea2d1f1 Mon Sep 17 00:00:00 2001
+From: adi1090x <adi1090x@gmail.com>
+Date: Mon, 13 Jul 2026 10:48:56 +0530
+Subject: [PATCH] fix-build-with-glibc-2.43-c23
+
+---
+ grub-core/osdep/linux/ofpath.c | 14 ++++++++------
+ util/probe.c                   |  6 +++---
+ util/resolve.c                 | 10 +++++-----
+ 3 files changed, 16 insertions(+), 14 deletions(-)
+
+diff --git a/grub-core/osdep/linux/ofpath.c b/grub-core/osdep/linux/ofpath.c
+index 24a4d5c..1ec5098 100644
+--- a/grub-core/osdep/linux/ofpath.c
++++ b/grub-core/osdep/linux/ofpath.c
+@@ -488,8 +488,10 @@ check_hba_identifiers (const char *sysfs_path, int *vendor, int *device_id)
+ static void
+ check_sas (const char *sysfs_path, int *tgt, unsigned long int *sas_address)
+ {
+-  char *ed = strstr (sysfs_path, "end_device");
+-  char *p, *q, *path;
++  const char *ed = strstr (sysfs_path, "end_device");
++  int ed_len;
++  const char *q;
++  char *p, *path;
+   char phy[21];
+   int fd;
+   size_t path_size;
+@@ -506,12 +508,12 @@ check_sas (const char *sysfs_path, int *tgt, unsigned long int *sas_address)
+   q = ed;
+   while (*q && *q != '/')
+     q++;
+-  *q = '\0';
++  ed_len = (int)(q - ed);
+ 
+-  path_size = (strlen (p) + strlen (ed)
++  path_size = (strlen (p) + ed_len
+ 	       + sizeof ("%s/sas_device/%s/phy_identifier"));
+   path = xmalloc (path_size);
+-  snprintf (path, path_size, "%s/sas_device/%s/phy_identifier", p, ed);
++  snprintf (path, path_size, "%s/sas_device/%.*s/phy_identifier", p, ed_len, ed);
+   fd = open (path, O_RDONLY);
+   if (fd < 0)
+     grub_util_error (_("cannot open `%s': %s"), path, strerror (errno));
+@@ -524,7 +526,7 @@ check_sas (const char *sysfs_path, int *tgt, unsigned long int *sas_address)
+ 
+   sscanf (phy, "%d", tgt);
+ 
+-  snprintf (path, path_size, "%s/sas_device/%s/sas_address", p, ed);
++  snprintf (path, path_size, "%s/sas_device/%.*s/sas_address", p, ed_len, ed);
+   fd = open (path, O_RDONLY);
+   if (fd < 0)
+     grub_util_error (_("cannot open `%s': %s"), path, strerror (errno));
+diff --git a/util/probe.c b/util/probe.c
+index 81d91cf..a9158d6 100644
+--- a/util/probe.c
++++ b/util/probe.c
+@@ -70,7 +70,7 @@ char *
+ grub_util_guess_bios_drive (const char *orig_path)
+ {
+   char *canon;
+-  char *ptr;
++  const char *ptr;
+   canon = grub_canonicalize_file_name (orig_path);
+   if (!canon)
+     return NULL;
+@@ -99,7 +99,7 @@ char *
+ grub_util_guess_efi_drive (const char *orig_path)
+ {
+   char *canon;
+-  char *ptr;
++  const char *ptr;
+   canon = grub_canonicalize_file_name (orig_path);
+   if (!canon)
+     return NULL;
+@@ -128,7 +128,7 @@ char *
+ grub_util_guess_baremetal_drive (const char *orig_path)
+ {
+   char *canon;
+-  char *ptr;
++  const char *ptr;
+   canon = grub_canonicalize_file_name (orig_path);
+   if (!canon)
+     return NULL;
+diff --git a/util/resolve.c b/util/resolve.c
+index b6e2631..2543791 100644
+--- a/util/resolve.c
++++ b/util/resolve.c
+@@ -138,12 +138,12 @@ read_dep_list (FILE *fp)
+ static char *
+ get_module_name (const char *str)
+ {
+-  char *base;
+-  char *ext;
++  const char *base;
++  const char *ext;
+ 
+   base = strrchr (str, '/');
+   if (! base)
+-    base = (char *) str;
++    base = str;
+   else
+     base++;
+ 
+@@ -164,9 +164,9 @@ get_module_name (const char *str)
+ static char *
+ get_module_path (const char *prefix, const char *str)
+ {
+-  char *dir;
++  const char *dir;
+   char *base;
+-  char *ext;
++  const char *ext;
+   char *ret;
+ 
+   ext = strrchr (str, '.');
+-- 
+2.55.0
+

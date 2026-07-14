@@ -1,0 +1,32 @@
+From f3e35fbc433d4035b642e3647f068035b7995ebd Mon Sep 17 00:00:00 2001
+From: adi1090x <adi1090x@gmail.com>
+Date: Mon, 13 Jul 2026 11:09:39 +0530
+Subject: [PATCH] gcc16-regparm
+
+---
+ include/grub/i386/pc/int.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/grub/i386/pc/int.h b/include/grub/i386/pc/int.h
+index a601040..c1d258f 100644
+--- a/include/grub/i386/pc/int.h
++++ b/include/grub/i386/pc/int.h
+@@ -22,11 +22,11 @@
+ #include <grub/symbol.h>
+ #include <grub/i386/pc/int_types.h>
+ 
+-void EXPORT_FUNC (grub_bios_interrupt) (grub_uint8_t intno,
+-					struct grub_bios_int_registers *regs)
+-     __attribute__ ((regparm(3)));
+-
+ #ifdef GRUB_MACHINE_PCBIOS
++ void EXPORT_FUNC (grub_bios_interrupt) (grub_uint8_t intno,
++                     struct grub_bios_int_registers *regs)
++      __attribute__ ((regparm(3)));
++
+ extern struct grub_i386_idt *EXPORT_VAR(grub_realidt);
+ #endif
+ 
+-- 
+2.55.0
+

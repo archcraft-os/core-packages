@@ -18,11 +18,6 @@ fix_thunar() {
 	fi
 }
 
-fix_nmd() {
-	## Create nmd script for bspwm session
-	cp -rf /usr/bin/networkmanager_dmenu /usr/bin/nmd && sed -i -e 's/config.ini/nmd.ini/g' /usr/bin/nmd
-}
-
 fix_xfce_notify() {
 	dbus_file='/usr/share/dbus-1/services/org.xfce.xfce4-notifyd.Notifications.service'
 	if [[ -e "$dbus_file" ]]; then
@@ -36,7 +31,6 @@ main() {
     case "$hookname" in
         fix-openbox)  		fix_openbox ;;
         fix-thunar)   		fix_thunar ;;
-        fix-nmd)      		fix_nmd ;;
         fix-xfce-notify)    fix_xfce_notify ;;
         "")           		echo "Nothing to do!";;
     esac

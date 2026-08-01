@@ -4,53 +4,48 @@
 _pkgname="calamares"
 pkgname="$_pkgname"
 pkgver=3.4.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Distribution-independent installer framework"
 url="https://codeberg.org/Calamares/calamares"
 license=("GPL-3.0-or-later")
 arch=('i686' 'x86_64')
-provides=('calamares')
 
 depends=(
   'boost-libs'
   'ckbcomp'
-  'cryptsetup'
-  'doxygen'
-  'efibootmgr'
-  'gptfdisk'
-  'gtk-update-icon-cache'
   'hwinfo'
-  'icu'
-  'kconfig'
   'kcrash'
-  'ki18n'
-  'kparts'
-  'kservice'
-  'kwidgetsaddons'
-  'mkinitcpio-openswap'
-  'polkit-qt6'
-  'rsync'
-  'solid'
-  'squashfs-tools'
+  'kconfig'
   'kcoreaddons'
+  'kiconthemes'
+  'ki18n'
   'kpmcore'
   'libpwquality'
-  'qt6-declarative'
+  'polkit-qt6'
+  'python'
   'qt6-svg'
+  'solid'
+  'squashfs-tools'
   'yaml-cpp'
+  'cryptsetup'
+  'efibootmgr'
+  'gptfdisk'
+  'mkinitcpio-openswap'
+  'rsync'
+  'qt6-declarative'
 )
 makedepends=(
   'boost'
   'cmake'
+  'extra-cmake-modules'
   'git'
+  'qt6-tools'
+  'qt6-translations'
   'python-jsonschema'
   'python-pyaml'
   'python-unidecode'
-  'extra-cmake-modules'
   'libglvnd'
   'ninja'
-  'qt6-tools'
-  'qt6-translations'
 )
 backup=('usr/share/calamares/modules/bootloader.conf'
         'usr/share/calamares/modules/displaymanager.conf'
@@ -64,15 +59,13 @@ sha256sums=('733bbbb00dc9f84874bd5c22960952f317ea2537565431179fa2152b2fbfdccc'
             'd56803756e0863524914db9aa747451e7485e290718ff7996749597d978f94e0')
 
 prepare() {
-	sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${_pkgname}-${pkgver}/CMakeLists.txt"
-	sed -i -e "s/desired_size = 512 \* 1024 \* 1024  \# 512MiB/desired_size = 512 \* 1024 \* 1024 \* 4  \# 2048MiB/" "$srcdir/${_pkgname}-${pkgver}/src/modules/fstab/main.py"
-	
 	# modify desktop file for Archcraft
-	sed -i -e 's#Exec=sh.*#Exec=sh -c "/etc/calamares/launch.sh"#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
-	sed -i -e 's#Name=.*#Name=Install Archcraft#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
-	sed -i -e 's#GenericName=.*#GenericName=System Installer#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
-	sed -i -e 's#Icon=.*#Icon=archcraft-green#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
-	sed -i -e 's#Comment=.*#Comment=Archcraft System Installer#g' "$srcdir/${_pkgname}-${pkgver}/calamares.desktop"
+	sed -i "$srcdir/${_pkgname}-${pkgver}/calamares.desktop" \
+		-e 's#Exec=sh.*#Exec=sh -c "/etc/calamares/launch.sh"#g' \
+		-e 's#Name=.*#Name=Install Archcraft#g' \
+		-e 's#GenericName=.*#GenericName=System Installer#g' \
+		-e 's#Icon=.*#Icon=archcraft-green#g' \
+		-e 's#Comment=.*#Comment=Archcraft System Installer#g'
 }
 
 build() {
@@ -88,17 +81,6 @@ build() {
     interactiveterminal
     packagechooserq
     services-openrc
-    keyboardq
-    license
-    localeq
-    oemid
-    partitionq
-    summaryq
-    tracking
-    usersq
-    welcomeq
-    zfs
-    zfshostid
   )
 
   # Correct source directory (inside src/)
@@ -111,8 +93,6 @@ build() {
     -DCMAKE_BUILD_TYPE=Release
     -DCMAKE_INSTALL_PREFIX='/usr'
     -DCMAKE_INSTALL_LIBDIR='lib'
-    -DWITH_APPSTREAM=OFF
-    -DWITH_PYBIND11=OFF
     -DWITH_QT6=ON
     -DINSTALL_CONFIG=ON
     -DSKIP_MODULES="${_skip_modules[*]}"

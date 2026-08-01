@@ -66,18 +66,34 @@ remove_bspwm() {
 	_remove_for_wm
 }
 
+## Remove Sway ----------
+remove_sway() {
+	_pkgs_to_remove=('archcraft-sway-free')
+	_files_to_remove=("$HOME_DIR"/.config/sway)
+	_remove_for_wm
+}
+
 ## ---------------------------------------------------------------------------------------
 
 ## Install Openbox ----------
 install_openbox() {
 	echo "[*] Installing Openbox Window Manager..."
 	remove_bspwm
+	remove_sway
 }
 
 ## Install Bspwm ----------
 install_bspwm() {
 	echo "[*] Installing Bspwm Window Manager..."
 	remove_openbox
+	remove_sway
+}
+
+## Install Sway ----------
+install_sway() {
+	echo "[*] Installing Sway Wayland Compositor..."
+	remove_openbox
+	remove_bspwm
 }
 
 ## Install Everything ----------
@@ -92,6 +108,8 @@ if [[ "$1" == '--openbox' ]]; then
 	install_openbox
 elif [[ "$1" == '--bspwm' ]]; then
 	install_bspwm
+elif [[ "$1" == '--sway' ]]; then
+	install_sway
 elif [[ "$1" == '--everything' ]]; then
 	install_everything
 fi

@@ -26,6 +26,8 @@ if [[ "$1" == '--openbox' ]]; then
 	enable_autologin 'openbox'
 elif [[ "$1" == '--bspwm' ]]; then
 	enable_autologin 'bspwm'
+elif [[ "$1" == '--sway' ]]; then
+	enable_autologin 'sway'
 elif [[ "$1" == '--everything' ]]; then
 	enable_autologin 'openbox'
 fi

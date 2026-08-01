@@ -12,4 +12,8 @@ if [[ -d "/run/archiso/copytoram" ]]; then
 fi
 
 ## Launch calamare installer accordingly
-pkexec calamares -d -style kvantum
+if [[ "$XDG_SESSION_TYPE" == 'wayland' ]]; then
+	sudo -E calamares -d -style kvantum
+else
+	pkexec calamares -d -style kvantum
+fi

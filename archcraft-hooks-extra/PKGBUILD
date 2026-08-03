@@ -2,12 +2,17 @@
 
 pkgname="archcraft-hooks-extra"
 pkgver=2.0
-pkgrel=8
+pkgrel=9
 pkgdesc='Extra pacman hooks for Archcraft'
 arch=('any')
 url="https://github.com/archcraft-os/core-packages"
 license=('GPL3')
 source=(
+		'archcraft-hook-bspwm-desktop.hook'
+		'archcraft-hook-i3wm-desktop.hook'
+		'archcraft-hook-openbox-desktop.hook'
+		'archcraft-hook-qtile-desktop.hook'
+		'archcraft-hook-xmonad-desktop.hook'
 		'archcraft-hook-i3wm.hook'
 		'archcraft-hook-openbox.hook'
 		'archcraft-hook-qtile.hook'
@@ -15,7 +20,12 @@ source=(
 		'archcraft-hook-xfce-notifyd.hook'
 		'archcraft-hooks-extra'
 )
-sha512sums=('a91f836acc6312d5e8546f95b899fcf366b16fcad019044c852a1d96f58fa68405d3a8655e2f2a26ca726dff1c4f29b1e1135391f69b82797aa5ba59a2c4ee3f'
+sha512sums=('854551dcdfb9f2a87d8f9e5c8f754b4fba0bbeb22c66794c6b7a7dbe660622427d5c98e825ecfa231ff9bf1b317bb961da4979714261565a30befb2782b274f8'
+            '98c1ba5b1f62257b78080be5f195dac90f76a88f38fa3b256ea639a72c442877e6c36d67b664211a08e5b22f37f6fb728ea0526d2d428791c9153f752969a757'
+            'f854d4fa954717213263313aa7ffa46f3ff8f5ff300a211bb5edb96c5eae31b6a2a7d414ee3085a64cb6c65be234a89f1e1f3f121781b02273403228a88d7480'
+            '122ce6f6aa6fd1e98a163bd6df6585c99ff66590910326a3c873b90f63968a5ceb620b52104eab8ec7ef9be425beea35c62d69a4783af58488433badc313d6bb'
+            'f813685ba267eacbae7ed561516ad35d3e16409fe8e2095668abfee29301c53b39846e5eefe7780f71ae2f71cda4d44c65de1cb3a129c2dc2784b205423e1926'
+            'a91f836acc6312d5e8546f95b899fcf366b16fcad019044c852a1d96f58fa68405d3a8655e2f2a26ca726dff1c4f29b1e1135391f69b82797aa5ba59a2c4ee3f'
             'c004daabf7bd7b20c40636fb03b18f01fddf5d54f86686e956cd5566ed2f33f10a7738520f3bb9ac77a6b058a4a2ccb9c85a19bebff7f661711948ba507077dd'
             '587c76d154b0a282f2356caf1635faeacab89d80a86a42e6c60f536d74fcc98df696a202b494b215511d2e0318f7d6fd0b7986dbead9fa124bdd6658de8f4647'
             '30dfcc62a29e33793dc3391036db347550c830ab50a7150330c3c95b96aec2e5e8282aa7968af0299f7d2f2696864445d9c72d009879b47163b4b7e11544cc4b'
@@ -25,6 +35,12 @@ sha512sums=('a91f836acc6312d5e8546f95b899fcf366b16fcad019044c852a1d96f58fa68405d
 package() {
   local hooks="$pkgdir"/usr/share/libalpm/hooks
   local bin="$pkgdir"/usr/bin
+
+  install -Dm 644 archcraft-hook-bspwm-desktop.hook  	"$hooks"/archcraft-hook-bspwm-desktop.hook
+  install -Dm 644 archcraft-hook-i3wm-desktop.hook  	"$hooks"/archcraft-hook-i3wm-desktop.hook
+  install -Dm 644 archcraft-hook-openbox-desktop.hook  	"$hooks"/archcraft-hook-openbox-desktop.hook
+  install -Dm 644 archcraft-hook-qtile-desktop.hook  	"$hooks"/archcraft-hook-qtile-desktop.hook
+  install -Dm 644 archcraft-hook-xmonad-desktop.hook  	"$hooks"/archcraft-hook-xmonad-desktop.hook
 
   install -Dm 644 archcraft-hook-i3wm.hook  		"$hooks"/archcraft-hook-i3wm.hook
   install -Dm 644 archcraft-hook-openbox.hook  		"$hooks"/archcraft-hook-openbox.hook

@@ -1,0 +1,14 @@
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = archcraft-openbox-premium
+Target = archcraft-openbox
+Target = openbox
+
+[Action]
+Description = Modifying Openbox Desktop file...
+When = PostTransaction
+Exec = /usr/bin/sed -i -e 's|^Exec=.*|Exec=/usr/bin/archcraft-session openbox-session|g' /usr/share/xsessions/openbox.desktop

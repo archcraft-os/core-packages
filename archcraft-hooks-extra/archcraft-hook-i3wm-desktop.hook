@@ -1,0 +1,14 @@
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = archcraft-i3wm-premium
+Target = archcraft-i3wm
+Target = i3-wm
+
+[Action]
+Description = Modifying i3wm Desktop file...
+When = PostTransaction
+Exec = /usr/bin/sed -i -e 's|^Exec=.*|Exec=/usr/bin/archcraft-session i3|g' /usr/share/xsessions/i3.desktop

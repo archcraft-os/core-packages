@@ -1,0 +1,14 @@
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = archcraft-bspwm-premium
+Target = archcraft-bspwm
+Target = bspwm
+
+[Action]
+Description = Modifying Bspwm Desktop file...
+When = PostTransaction
+Exec = /usr/bin/sed -i -e 's|^Exec=.*|Exec=/usr/bin/archcraft-session bspwm|g' /usr/share/xsessions/bspwm.desktop

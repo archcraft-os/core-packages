@@ -1,0 +1,14 @@
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = archcraft-qtile-premium
+Target = archcraft-qtile
+Target = qtile
+
+[Action]
+Description = Modifying Qtile Desktop file...
+When = PostTransaction
+Exec = /usr/bin/sed -i -e 's|^Exec=.*|Exec=/usr/bin/archcraft-session qtile start|g' /usr/share/xsessions/qtile.desktop
